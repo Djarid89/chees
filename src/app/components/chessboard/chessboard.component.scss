@@ -2,31 +2,6 @@
   display: flex;
 }
 
-.left-bar-container div,
-.right-bar-container div {
-  width: 25px;
-  height: 100px;
-  background-color: brown;
-}
-
-.upper-bar-container,
-.bottom-bar-container {
-  height: 25px;
-}
-
-.upper-bar-container div,
-.bottom-bar-container div {
-  width: 100px;
-  height: 25px;
-  display: inline-block;
-  background-color: brown;
-}
-
-.upper-bar-container div.filler,
-.bottom-bar-container div.filler {
-  width: 25px;
-}
-
 .row {
   height: 100px;
 }
