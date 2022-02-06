@@ -1,3 +1,16 @@
-<div class="row" *ngFor="let row of cheesboardDim">
-  <div [ngClass]="getCellClass(row, cell)" *ngFor="let cell of cheesboardDim"></div>
+
+<div class="upper-bar-container">
+  <div class="filler"></div><div *ngFor="let row of cheesboardDim"></div><div class="filler"></div>
+</div>
+<div class="flex-container">
+  <div class="left-bar-container"><div *ngFor="let row of cheesboardDim"></div></div>
+  <div>
+    <div class="row" *ngFor="let row of cheesboardDim">
+      <div [ngClass]="getCellClass(row, cell)" *ngFor="let cell of cheesboardDim"></div>
+    </div>
+  </div>
+  <div class="right-bar-container"><div *ngFor="let row of cheesboardDim"></div></div>
+</div>
+<div class="bottom-bar-container">
+  <div class="filler"></div><div *ngFor="let row of cheesboardDim"></div><div class="filler"></div>
 </div>
