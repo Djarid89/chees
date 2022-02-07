@@ -8,12 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 export class VerticalBarComponent implements OnInit {
   @Input() barItems: string[] | undefined;
 
-  constructor() { }
-
   ngOnInit(): void {
     if(!this.barItems) {
       this.barItems = ['', '', '', '', '', '', '', ''];
     }
   }
-
 }
