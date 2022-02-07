@@ -1,7 +1,7 @@
 
 <horizontal-bar></horizontal-bar>
 <div class="flex-container">
-  <vertical-bar [barItems]="['A','B','C','D','E','F','G','H']"></vertical-bar>
+  <vertical-bar [barItems]="['8','7','6','5','4','3','2','1']"></vertical-bar>
   <div>
     <div class="row" *ngFor="let row of cheesboardDim">
       <div [ngClass]="getCellClass(row, cell)" *ngFor="let cell of cheesboardDim"></div>
@@ -9,4 +9,4 @@
   </div>
   <vertical-bar></vertical-bar>
 </div>
-<horizontal-bar [barItems]="['1','2','3','4','5','6','7','8']"></horizontal-bar>
+<horizontal-bar [barItems]="['A','B','C','D','E','F','G','H']"></horizontal-bar>
