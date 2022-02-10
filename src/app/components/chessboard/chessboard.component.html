@@ -3,11 +3,8 @@
 <div class="flex-container">
   <vertical-bar [barItems]="['8','7','6','5','4','3','2','1']"></vertical-bar>
   <div>
-    <div class="row" *ngFor="let row of cheesboardDim; index as horIndex">
-      <chees-box *ngFor="let cheesBox of cheesboardDim; index as vertIndex"
-                 [horizzontal]="getIndexValue(horIndex, row)"
-                 [vertical]="getIndexValue(vertIndex, cheesBox)">
-      </chees-box>
+    <div class="row" *ngFor="let row of cheesboard?.board; index as horIndex">
+      <chees-box *ngFor="let pawn of row; index as vertIndex" [row]="horIndex" [column]="vertIndex" [pawn]="pawn"></chees-box>
     </div>
   </div>
   <vertical-bar></vertical-bar>

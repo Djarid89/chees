@@ -1,1 +1,5 @@
-<div *ngIf="coordinate" [ngClass]="coordinate.isPair() ? 'white' : 'brown'"></div>
+<div [ngClass]="isPair() ? 'white' : 'brown'">
+  <pawn-chees>
+    <ng-template #pawnChees></ng-template>
+  </pawn-chees>
+</div>

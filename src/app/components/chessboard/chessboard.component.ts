@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { IIndexValue } from '../../shared/interface/shared';
+import { Component, OnInit} from '@angular/core';
+import { Cheesboard } from './class/cheesBoard';
 
 @Component({
   selector: 'chessboard',
   templateUrl: './chessboard.component.html',
   styleUrls: ['./chessboard.component.scss']
 })
-export class ChessboardComponent {
-  cheesboardDim = ['0', '1', '2', '3', '4', '5', '6', '7'];
+export class ChessboardComponent implements OnInit {
+  cheesboard: Cheesboard | undefined;
 
-  getIndexValue(index: number, value: string): IIndexValue {
-    return { index: index, value: value };
+  ngOnInit(): void {
+    this.cheesboard = new Cheesboard();
   }
 }
