@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { IIndexValue } from '../../shared/interface/shared';
 
 @Component({
   selector: 'chessboard',
@@ -6,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chessboard.component.scss']
 })
 export class ChessboardComponent {
-  cheesboardDim = [0, 1, 2, 3, 4, 5, 6, 7];
+  cheesboardDim = ['0', '1', '2', '3', '4', '5', '6', '7'];
 
-  getCellClass(row: number, cell: number) {
-    const pair = (row + cell) % 2 !== 0;
-    return {'cell': true, 'cell-white': pair, 'cell-brown': !pair };
+  getIndexValue(index: number, value: string): IIndexValue {
+    return { index: index, value: value };
   }
 }
