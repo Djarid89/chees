@@ -4,7 +4,11 @@
   <vertical-bar [barItems]="['8','7','6','5','4','3','2','1']"></vertical-bar>
   <div>
     <div class="row" *ngFor="let row of cheesboard?.board; index as horIndex">
-      <chees-box *ngFor="let pawn of row; index as vertIndex" [row]="horIndex" [column]="vertIndex" [pawn]="pawn"></chees-box>
+      <chees-box *ngFor="let pawnchees of row; index as vertIndex"
+                 [row]="horIndex"
+                 [column]="vertIndex"
+                 [pawnchees]="pawnchees">
+      </chees-box>
     </div>
   </div>
   <vertical-bar></vertical-bar>

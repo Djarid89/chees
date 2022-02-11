@@ -1,10 +1,14 @@
 export interface IPawnChees {
-  color: IPawnTeam;
+  pawnCheesType: IPawnCheesType;
+  color: IPawnTeam | undefined;
+}
 
+export interface IPawnBase {
   selected: () => void;
   unselected: () => void;
   eat: () => void;
   beEat: () => void;
+  getImage: () => void;
 }
 
 export interface IPawn {

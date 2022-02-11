@@ -11,5 +11,7 @@ export class ChessboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.cheesboard = new Cheesboard();
+    this.cheesboard.initBlackTeam();
+    this.cheesboard.initWhiteTeam();
   }
 }
