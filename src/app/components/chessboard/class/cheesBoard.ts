@@ -1,7 +1,7 @@
-import { IPawnChees, IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
+import { IPawnCheesType, IPawnTeam, IPawnCheesBase } from "../../pawn-chees/interface/pawn-chees";
 
 export class Cheesboard {
-  public board!: IPawnChees[][];
+  public board!: IPawnCheesBase[][];
 
   constructor() {
     this.board = [];

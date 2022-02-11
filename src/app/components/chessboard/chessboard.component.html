@@ -7,7 +7,8 @@
       <chees-box *ngFor="let pawnchees of row; index as vertIndex"
                  [row]="horIndex"
                  [column]="vertIndex"
-                 [pawnchees]="pawnchees">
+                 [pawnchees]="pawnchees"
+                 (mouseDown)="showAvaibleMovement($event, horIndex, vertIndex)">
       </chees-box>
     </div>
   </div>

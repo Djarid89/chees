@@ -1,14 +1,15 @@
-export interface IPawnChees {
-  pawnCheesType: IPawnCheesType;
+export interface IPawnCheesBase {
   color: IPawnTeam | undefined;
+  pawnCheesType: IPawnCheesType;
 }
 
-export interface IPawnBase {
-  selected: () => void;
-  unselected: () => void;
-  eat: () => void;
-  beEaten: () => void;
-  move: () => void;
+export interface IPawnCheesExtended {
+  color: IPawnTeam | undefined;
+
+  showAvaibleMove: (row: number, column: number) => void;
+  // drop: () => void;
+  // eat: () => void;
+  // move: () => void;
 }
 
 export enum IPawnCheesType {

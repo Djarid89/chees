@@ -1,5 +1,5 @@
 <div [ngClass]="isPair() ? 'white' : 'brown'">
-  <pawn-chees [pawnchees]="pawnchees">
+  <pawn-chees (mouseDown)="propagate($event)" [pawnchees]="pawnchees">
     <ng-container [ngSwitch]="pawnchees.pawnCheesType">
       <pawn [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
       <bishop [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.bishop"></bishop>

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPawnBase, IPawnTeam } from '../../interface/pawn-chees';
-import { PAWN_BASE } from '../pawn-chees.token';
+import { IPawnCheesExtended, IPawnTeam } from '../../interface/pawn-chees';
+import { PAWN_EXTENDED } from '../pawn-chees.token';
 
 @Component({
   selector: 'queen',
@@ -8,12 +8,12 @@ import { PAWN_BASE } from '../pawn-chees.token';
   styleUrls: ['./queen.component.scss'],
   providers: [
     {
-      provide: PAWN_BASE,
+      provide: PAWN_EXTENDED,
       useExisting: QueenComponent
     }
   ]
 })
-export class QueenComponent implements OnInit, IPawnBase {
+export class QueenComponent implements OnInit, IPawnCheesExtended {
   @Input() color: IPawnTeam | undefined;
   IPawnTeam = IPawnTeam;
 
@@ -23,11 +23,11 @@ export class QueenComponent implements OnInit, IPawnBase {
   move() {
   }
 
-  selected() {
+  showAvaibleMove() {
     console.log('queen');
   }
 
-  unselected() {
+  drop() {
   }
 
   eat() {
