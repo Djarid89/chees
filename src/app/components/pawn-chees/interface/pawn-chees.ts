@@ -7,15 +7,7 @@ export interface IPawnBase {
   selected: () => void;
   unselected: () => void;
   eat: () => void;
-  beEat: () => void;
-  getImage: () => void;
-}
-
-export interface IPawn {
-  transform: () => void;
-}
-
-export interface IPawnMove {
+  beEaten: () => void;
   move: () => void;
 }
 

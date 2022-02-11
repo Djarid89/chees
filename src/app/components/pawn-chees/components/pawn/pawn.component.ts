@@ -1,21 +1,39 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPawn, IPawnChees, IPawnMove, IPawnTeam } from '../../interface/pawn-chees';
-import { PawnCheesComponent } from '../../pawn-chees.component';
+import { IPawnBase, IPawnTeam } from '../../interface/pawn-chees';
+import { PAWN_BASE } from '../pawn-chees.token';
 
 @Component({
   selector: 'pawn',
   templateUrl: './pawn.component.html',
-  styleUrls: ['./pawn.component.scss']
+  styleUrls: ['./pawn.component.scss'],
+  providers: [
+    {
+      provide: PAWN_BASE,
+      useExisting: PawnComponent
+    }
+  ]
 })
-export class PawnComponent extends PawnCheesComponent implements OnInit, IPawnMove, IPawn {
-  @Input() pawnchees!: IPawnChees;
+export class PawnComponent implements OnInit, IPawnBase {
+  @Input() color: IPawnTeam | undefined;
   IPawnTeam = IPawnTeam;
 
   constructor() {
-    super();
   }
 
   move() {
+  }
+
+  selected() {
+    console.log('pawn');
+  }
+
+  unselected() {
+  }
+
+  eat() {
+  }
+
+  beEaten() {
 
   }
 

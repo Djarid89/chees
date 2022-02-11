@@ -1,5 +1,12 @@
 <div [ngClass]="isPair() ? 'white' : 'brown'">
   <pawn-chees [pawnchees]="pawnchees">
-    <ng-template #pawnChees></ng-template>
+    <ng-container [ngSwitch]="pawnchees.pawnCheesType">
+      <pawn [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
+      <bishop [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.bishop"></bishop>
+      <king [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.king"></king>
+      <knight [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.knight"></knight>
+      <queen [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.queen"></queen>
+      <rook [color]="pawnchees.color" *ngSwitchCase="IPawnCheesType.rook"></rook>
+    </ng-container>
   </pawn-chees>
 </div>

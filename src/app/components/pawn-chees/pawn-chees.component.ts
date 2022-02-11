@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, ContentChild, HostListener, Input } from '@angular/core';
+import { PAWN_BASE } from './components/pawn-chees.token';
 import { IPawnBase, IPawnChees } from './interface/pawn-chees';
 
 @Component({
@@ -8,39 +9,30 @@ import { IPawnBase, IPawnChees } from './interface/pawn-chees';
 })
 export class PawnCheesComponent implements IPawnBase {
   @Input() pawnchees!: IPawnChees;
+  @ContentChild(PAWN_BASE) pawnBase!: IPawnBase;
+  @HostListener('click', ['$event'])
 
-  getImage(): string {
-    switch(this.pawnchees.pawnCheesType) {
-      case 1:
-        return `./src/assets/pawn.png`;
-      case 2:
-        return `./src/assets/bishop.png`;
-      case 3:
-        return `./src/assets/king.png`;
-      case 4:
-        return `./src/assets/knight.png`;
-      case 5:
-        return `./src/assets/queen.png`;
-      case 6:
-        return `./src/assets/rook.png`;
-      default:
-        return ``;
-    }
+  onClick() {
+    this.selected();
+  }
+
+  move() {
+    this.pawnBase.move();
   }
 
   selected() {
-    console.log('Fai roba');
+    this.pawnBase.selected();
   }
 
   unselected() {
-    console.log('Fai roba');
+    this.pawnBase.unselected();
   }
 
   eat() {
-    console.log('Fai roba');
+    this.pawnBase.eat();
   }
 
-  beEat() {
-    console.log('Fai roba');
+  beEaten() {
+    this.pawnBase.beEaten();
   }
 }
