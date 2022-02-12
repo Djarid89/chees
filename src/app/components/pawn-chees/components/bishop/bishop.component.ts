@@ -18,7 +18,7 @@ export class BishopComponent implements IPawnChees {
   @Input() pawnChees!: PawnChees;
   IPawnTeam = IPawnTeam;
 
-  setCheesBoxMovable(board: CheesBox[][], row: number, column: number, isFirstMove: boolean) {
+  setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
     
   }
 }

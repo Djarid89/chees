@@ -3,7 +3,7 @@ import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
 export interface IPawnChees {
   pawnChees: PawnChees;
   
-  setCheesBoxMovable: (board: CheesBox[][], row: number, column: number, isFirstMove: boolean) => void;
+  setCheesBoxMovable: (board: CheesBox[][], row: number, column: number) => void;
 }
 
 export enum IPawnCheesType {

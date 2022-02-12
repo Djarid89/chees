@@ -21,7 +21,7 @@ export class RookComponent implements OnInit, IPawnChees {
   constructor() {
   }
 
-  setCheesBoxMovable(board: CheesBox[][], row: number, column: number, isFirstMove: boolean) {
+  setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
 
   }
 

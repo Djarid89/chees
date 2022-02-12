@@ -21,7 +21,7 @@ export class QueenComponent implements OnInit, IPawnChees {
   constructor() {
   }
 
-  setCheesBoxMovable(board: CheesBox[][], row: number, column: number, isFirstMove: boolean) {
+  setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
     
   }
 
