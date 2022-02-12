@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { CheesBox, PawnChees } from 'src/app/components/chees-box/class/chees-box';
 import { IPawnChees, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
@@ -15,7 +15,7 @@ import { PAWN_CHEES } from '../pawn-chees.token';
   ]
 })
 export class RookComponent implements OnInit, IPawnChees {
-  @Input() color!: IPawnTeam | undefined;
+  @Input() pawnChees!: PawnChees;
   IPawnTeam = IPawnTeam;
 
   constructor() {

@@ -1,7 +1,7 @@
-import { CheesBox } from "../../chees-box/class/chees-box";
+import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
 
 export interface IPawnChees {
-  color: IPawnTeam | undefined;
+  pawnChees: PawnChees;
   
   setCheesBoxMovable: (board: CheesBox[][], row: number, column: number, isFirstMove: boolean) => void;
 }

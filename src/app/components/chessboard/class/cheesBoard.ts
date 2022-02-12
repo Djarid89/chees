@@ -48,6 +48,6 @@ export class Cheesboard {
     this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
     this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
     this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
-    this.board[row][5] = new CheesBox(row, 4, new PawnChees(IPawnCheesType.bishop, color));
+    this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
   }
 }

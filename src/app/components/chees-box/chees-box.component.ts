@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { CheesBoxPawnCheesConnectorService } from 'src/app/service/chees-box-pawn-chees-connector.service';
 import { IPawnChees, IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
 import { CheesBox } from './class/chees-box';
 
@@ -15,7 +16,10 @@ export class CheesBoxComponent {
   @HostListener('mouseup') mouseUpEvent() { this.pawnCheesDropped(); }
   IPawnCheesType = IPawnCheesType;
 
+  constructor(private readonly connector: CheesBoxPawnCheesConnectorService) { }
+
   pawnCheesDropped(): void {
+    this.connector.pawnCheeseAdder$.next(this.cheesBox);
     this.mouseUp.emit(this.cheesBox)
   }
 

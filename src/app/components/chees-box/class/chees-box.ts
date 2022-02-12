@@ -19,11 +19,11 @@ export class CheesBox {
 }
 
 export class PawnChees {
-  pawnCheesType: IPawnCheesType;
+  type: IPawnCheesType;
   color: IPawnTeam;
 
-  constructor(pawnCheesType: IPawnCheesType, color: IPawnTeam) {
-    this.pawnCheesType = pawnCheesType;
+  constructor(type: IPawnCheesType, color: IPawnTeam) {
+    this.type = type;
     this.color = color;
   }
 }
