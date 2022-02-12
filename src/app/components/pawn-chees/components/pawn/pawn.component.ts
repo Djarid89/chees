@@ -37,6 +37,6 @@ export class PawnComponent implements IPawnChees {
   }
 
   private setMovable(cheesBox: CheesBox): void {
-    cheesBox.isMoveable = cheesBox.pawnChees?.pawnCheesType === null;
+    cheesBox.isMoveable = cheesBox.pawnChees === null;
   }
 }

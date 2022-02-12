@@ -3,10 +3,10 @@ import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees
 export class CheesBox {
   row: number;
   column: number;
-  pawnChees: CheesBoxPawnChees | null;
+  pawnChees: PawnChees | null;
   isMoveable: boolean;
 
-  constructor(row: number, column: number, pawnChees?: CheesBoxPawnChees | null) {
+  constructor(row: number, column: number, pawnChees?: PawnChees | null) {
     this.row = row;
     this.column = column;
     this.pawnChees = pawnChees || null;
@@ -18,7 +18,7 @@ export class CheesBox {
   }
 }
 
-export class CheesBoxPawnChees {
+export class PawnChees {
   pawnCheesType: IPawnCheesType;
   color: IPawnTeam;
 
