@@ -1,37 +1,27 @@
-import { Component, ContentChild, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { PAWN_EXTENDED } from './components/pawn-chees.token';
-import { IPawnCheesBase, IPawnCheesExtended, IPawnCheesType, IPawnTeam } from './interface/pawn-chees';
+import { Component, ContentChild, EventEmitter, HostListener, Output } from '@angular/core';
+import { PAWN_CHEES } from './components/pawn-chees.token';
+import { IPawnChees } from './interface/pawn-chees';
 
 @Component({
   selector: 'pawn-chees',
   templateUrl: './pawn-chees.component.html',
   styleUrls: ['./pawn-chees.component.scss']
 })
-export class PawnCheesComponent implements IPawnCheesBase {
-  pawnCheesType!: IPawnCheesType;
-  color: IPawnTeam | undefined;
-  @Input() pawnchees!: IPawnCheesBase;
-  @Output() mouseDown = new EventEmitter<IPawnCheesExtended>();
-  @Output() dragEnd = new EventEmitter<IPawnCheesExtended>();
-  @ContentChild(PAWN_EXTENDED) pawnBase!: IPawnCheesExtended;
+export class PawnCheesComponent {
+  @Output() mouseDown = new EventEmitter<IPawnChees>();
+  @Output() drop = new EventEmitter();
+  @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
   @HostListener('mousedown') mouseDownEvent() { this.grab() }
-  // @HostListener('dragend') dragEndEvent() { this.drop() }
-
-  move(): void {
-  }
+  @HostListener('mouseup') mouseup() { this.release() }
+  @HostListener('dragend') dropEvent() { this.release() }
 
   grab(): void {
-    this.mouseDown.emit({
-      color: this.pawnchees.color,
-      showAvaibleMove: this.pawnBase.showAvaibleMove
-    });
+    if(this.pawnBase) {
+      this.mouseDown.emit(this.pawnBase);
+    }
   }
 
-  // drop(): void {
-  //   this.dragEnd.emit(this.pawnchees);
-  // }
-
-  // eat(): void {
-  //   this.pawnBase.eat();
-  // }
+  release(): void {
+    this.drop.emit();
+  }
 }

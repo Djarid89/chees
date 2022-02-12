@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPawnCheesExtended, IPawnTeam } from '../../interface/pawn-chees';
-import { PAWN_EXTENDED } from '../pawn-chees.token';
+import { ICheesBox, IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
+import { PAWN_CHEES } from '../pawn-chees.token';
 
 @Component({
   selector: 'pawn',
@@ -8,23 +8,34 @@ import { PAWN_EXTENDED } from '../pawn-chees.token';
   styleUrls: ['./pawn.component.scss'],
   providers: [
     {
-      provide: PAWN_EXTENDED,
+      provide: PAWN_CHEES,
       useExisting: PawnComponent
     }
   ]
 })
-export class PawnComponent implements OnInit, IPawnCheesExtended {
+export class PawnComponent implements IPawnChees {
   @Input() color: IPawnTeam | undefined;
   IPawnTeam = IPawnTeam;
 
-  constructor() {
+  setCheesBoxMovable(board: ICheesBox[][], row: number, column: number, isFirstMove: boolean): void {
+    if(this.color === IPawnTeam.black) {
+      if(row + 1 <= 7) {
+        this.setMovable(board[row + 1][column]);
+      }
+      if(isFirstMove && row + 2 <= 7) {
+        this.setMovable(board[row + 2][column]);
+      }
+    } else {
+      if(row - 1 >= 0) {
+        this.setMovable(board[row - 1][column]);
+      }
+      if(isFirstMove && row - 2 >= 0) {
+        this.setMovable(board[row - 2][column]);
+      }
+    }
   }
 
-  showAvaibleMove() {
+  private setMovable(cheesBox: ICheesBox): void {
+    cheesBox.isMoveable = cheesBox.pawnChees.pawnCheesType === IPawnCheesType.empty;
   }
-
-
-  ngOnInit(): void {
-  }
-
 }

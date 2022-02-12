@@ -1,4 +1,4 @@
 import { InjectionToken } from "@angular/core";
-import { IPawnCheesExtended } from "../interface/pawn-chees";
+import { IPawnChees } from "../interface/pawn-chees";
 
-export const PAWN_EXTENDED = new InjectionToken<IPawnCheesExtended>('pawn-extended');
+export const PAWN_CHEES = new InjectionToken<IPawnChees>('pawn-chees');

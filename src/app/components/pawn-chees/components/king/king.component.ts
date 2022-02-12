@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPawnCheesExtended, IPawnTeam } from '../../interface/pawn-chees';
-import { PAWN_EXTENDED } from '../pawn-chees.token';
+import { ICheesBox, IPawnChees, IPawnTeam } from '../../interface/pawn-chees';
+import { PAWN_CHEES } from '../pawn-chees.token';
 
 @Component({
   selector: 'king',
@@ -8,35 +8,26 @@ import { PAWN_EXTENDED } from '../pawn-chees.token';
   styleUrls: ['./king.component.scss'],
   providers: [
     {
-      provide: PAWN_EXTENDED,
+      provide: PAWN_CHEES,
       useExisting: KingComponent
     }
   ]
 })
-export class KingComponent implements OnInit, IPawnCheesExtended {
+export class KingComponent implements OnInit, IPawnChees {
   @Input() color: IPawnTeam | undefined;
   IPawnTeam = IPawnTeam;
 
   constructor() {
   }
 
-  move() {
+  setCheesBoxMovable(board: ICheesBox[][], row: number, column: number, isFirstMove: boolean) {
+    
   }
 
-  showAvaibleMove() {
-    console.log('king');
+  setMovable(board: ICheesBox, isMoveable: boolean) {
+    
   }
-
-  drop() {
-  }
-
-  eat() {
-  }
-
-  beEaten() {
-
-  }
-
+  
   ngOnInit(): void {
   }
 

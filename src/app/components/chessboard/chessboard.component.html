@@ -1,17 +1,18 @@
 
 <horizontal-bar></horizontal-bar>
 <div class="flex-container">
-  <vertical-bar [barItems]="['8','7','6','5','4','3','2','1']"></vertical-bar>
+  <vertical-bar [barItems]="number"></vertical-bar>
   <div>
-    <div class="row" *ngFor="let row of cheesboard?.board; index as horIndex">
-      <chees-box *ngFor="let pawnchees of row; index as vertIndex"
+    <div class="row" *ngFor="let row of cheesboard.board; index as horIndex">
+      <chees-box *ngFor="let cheesBox of row; index as vertIndex"
                  [row]="horIndex"
                  [column]="vertIndex"
-                 [pawnchees]="pawnchees"
-                 (mouseDown)="showAvaibleMovement($event, horIndex, vertIndex)">
+                 [cheesBox]="cheesBox"
+                 (mouseDown)="showAvaibleMovement($event, horIndex, vertIndex)"
+                 (drop)="dropPawnChees()">
       </chees-box>
     </div>
   </div>
   <vertical-bar></vertical-bar>
 </div>
-<horizontal-bar [barItems]="['A','B','C','D','E','F','G','H']"></horizontal-bar>
+<horizontal-bar [barItems]="letter"></horizontal-bar>
