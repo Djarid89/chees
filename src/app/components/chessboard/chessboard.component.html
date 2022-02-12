@@ -5,10 +5,9 @@
   <div>
     <div class="row" *ngFor="let row of cheesboard.board; index as horIndex">
       <chees-box *ngFor="let cheesBox of row; index as vertIndex"
-                 [row]="horIndex"
-                 [column]="vertIndex"
                  [cheesBox]="cheesBox"
                  (mouseDown)="showAvaibleMovement($event, horIndex, vertIndex)"
+                 (mouseUp)="movePawnChees($event)"
                  (drop)="dropPawnChees()">
       </chees-box>
     </div>

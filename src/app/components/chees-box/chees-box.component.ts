@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ICheesBox, IPawnChees, IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { IPawnChees, IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
+import { CheesBox } from './class/chees-box';
 
 @Component({
   selector: 'chees-box',
@@ -7,15 +8,15 @@ import { ICheesBox, IPawnChees, IPawnCheesType } from '../pawn-chees/interface/p
   styleUrls: ['./chees-box.component.scss']
 })
 export class CheesBoxComponent {
-  @Input() row!: number;
-  @Input() column!: number;
-  @Input() cheesBox!: ICheesBox;
+  @Input() cheesBox!: CheesBox;
   @Output() mouseDown = new EventEmitter<IPawnChees>();
+  @Output() mouseUp = new EventEmitter<CheesBox>();
   @Output() drop = new EventEmitter<IPawnChees>();
+  @HostListener('mouseup') mouseUpEvent() { this.pawnCheesDropped(); }
   IPawnCheesType = IPawnCheesType;
 
-  isPair(): boolean {
-    return (this.row + this.column) % 2 === 0;
+  pawnCheesDropped(): void {
+    this.mouseUp.emit(this.cheesBox)
   }
 
   propagateMouseDown(pawnChees: IPawnChees) {

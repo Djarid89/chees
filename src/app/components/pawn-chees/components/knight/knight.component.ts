@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ICheesBox, IPawnChees, IPawnTeam } from '../../interface/pawn-chees';
+import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { IPawnChees, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
 @Component({
@@ -14,17 +15,13 @@ import { PAWN_CHEES } from '../pawn-chees.token';
   ]
 })
 export class KnightComponent implements OnInit, IPawnChees {
-  @Input() color: IPawnTeam | undefined;
+  @Input() color!: IPawnTeam | undefined;
   IPawnTeam = IPawnTeam;
 
   constructor() {
   }
 
-  setCheesBoxMovable(board: ICheesBox[][], row: number, column: number, isFirstMove: boolean) {
-    
-  }
-
-  setMovable(board: ICheesBox, isMoveable: boolean) {
+  setCheesBoxMovable(board: CheesBox[][], row: number, column: number, isFirstMove: boolean) {
     
   }
 

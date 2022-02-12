@@ -1,4 +1,5 @@
 import { Component, OnInit} from '@angular/core';
+import { CheesBox } from '../chees-box/class/chees-box';
 import { IPawnChees } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
@@ -13,6 +14,7 @@ export class ChessboardComponent implements OnInit {
   letter = ['A','B','C','D','E','F','G','H'];
   isFirstMove = true;
 
+
   ngOnInit(): void {
     this.cheesboard = new Cheesboard();
     this.cheesboard.initBlackTeam();
@@ -23,6 +25,10 @@ export class ChessboardComponent implements OnInit {
     if(pawnChees) {
       pawnChees.setCheesBoxMovable(this.cheesboard?.board, row, column, this.isFirstMove);
     }
+  }
+
+  movePawnChees(cheesBox: CheesBox) {
+
   }
 
   dropPawnChees(): void {

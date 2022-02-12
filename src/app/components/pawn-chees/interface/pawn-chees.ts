@@ -1,17 +1,9 @@
-export interface ICheesBox {
-  isMoveable: boolean;
-  pawnChees: ICheesBoxPawnChees;
-}
-
-export interface ICheesBoxPawnChees {
-  pawnCheesType: IPawnCheesType;
-  color: IPawnTeam | undefined;
-}
+import { CheesBox } from "../../chees-box/class/chees-box";
 
 export interface IPawnChees {
   color: IPawnTeam | undefined;
   
-  setCheesBoxMovable: (board: ICheesBox[][], row: number, column: number, isFirstMove: boolean) => void;
+  setCheesBoxMovable: (board: CheesBox[][], row: number, column: number, isFirstMove: boolean) => void;
 }
 
 export enum IPawnCheesType {
