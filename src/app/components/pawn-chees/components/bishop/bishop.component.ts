@@ -23,7 +23,7 @@ export class BishopComponent extends BasePawnChees implements IPawnChees {
     let _row = row + 1;
     let _column = column + 1;
     while(_row <= 7 && _column <= 7) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -34,7 +34,7 @@ export class BishopComponent extends BasePawnChees implements IPawnChees {
     _row = row - 1;
     _column = column + 1;
     while(_row >= 0 && _column <= 7) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -45,7 +45,7 @@ export class BishopComponent extends BasePawnChees implements IPawnChees {
     _row = row - 1;
     _column = column - 1;
     while(_row >= 0 && _column >= 0) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -56,7 +56,7 @@ export class BishopComponent extends BasePawnChees implements IPawnChees {
     _row = row + 1;
     _column = column - 1;
     while(_row <= 7 && _column >= 0) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {

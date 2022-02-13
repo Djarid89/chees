@@ -21,28 +21,28 @@ export class KingComponent extends BasePawnChees implements IPawnChees {
 
   setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
     if(row + 1 <= 7 && column + 1 <= 7) {
-      this.setMovable(board[row + 1][column + 1]);
+      this.setCheesBoxStatus(board[row + 1][column + 1], this.color);
     }
     if(column + 1 <= 7) {
-      this.setMovable(board[row][column + 1]);
+      this.setCheesBoxStatus(board[row][column + 1], this.color);
     }
     if(row - 1 >= 0 && column + 1 <= 7) {
-      this.setMovable(board[row - 1][column + 1]);
+      this.setCheesBoxStatus(board[row - 1][column + 1], this.color);
     }
     if(row - 1 >= 0) {
-      this.setMovable(board[row - 1][column]);
+      this.setCheesBoxStatus(board[row - 1][column], this.color);
     }
     if(row - 1 >= 0 && column - 1 >= 0) {
-      this.setMovable(board[row - 1][column - 1]);
+      this.setCheesBoxStatus(board[row - 1][column - 1], this.color);
     }
     if(column - 1 >= 0) {
-      this.setMovable(board[row][column - 1]);
+      this.setCheesBoxStatus(board[row][column - 1], this.color);
     }
     if(row + 1 <= 7 &&  column - 1 >= 0) {
-      this.setMovable(board[row + 1][column - 1]);
+      this.setCheesBoxStatus(board[row + 1][column - 1], this.color);
     }
     if(row + 1 <= 7) {
-      this.setMovable(board[row + 1][column]);
+      this.setCheesBoxStatus(board[row + 1][column], this.color);
     }
   }
 }

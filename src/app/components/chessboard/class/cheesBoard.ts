@@ -1,8 +1,9 @@
 import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
-import { IPawnChees, IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
+import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
 
 export class Cheesboard {
   board!: CheesBox[][];
+  static graveyard: PawnChees[] = [];
   static isFirstMoveWhite = true;
   static isFirstMoveBlack = true;
 
@@ -30,23 +31,35 @@ export class Cheesboard {
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
   }
 
-  static movePawnChees(pawnChees: IPawnChees, formCheesBox: CheesBox, toCheesBox: CheesBox): void {
-    if(!toCheesBox.isMoveable || !pawnChees) {
+  static movePawnChees(formCheesBox: CheesBox, toCheesBox: CheesBox): void {
+    if(!formCheesBox.pawnChees) {
       return;
     }
-    formCheesBox.pawnChees = null;
-    toCheesBox.pawnChees = new PawnChees(pawnChees.type, pawnChees.color);
-    if(pawnChees.color === IPawnTeam.white) {
+    toCheesBox.pawnChees = new PawnChees(formCheesBox.pawnChees.type, formCheesBox.pawnChees.color);
+    if(formCheesBox.pawnChees.color === IPawnTeam.white) {
       this.isFirstMoveWhite = false;
     } else {
       this.isFirstMoveBlack = false;
     }
+    formCheesBox.pawnChees = null;
   }
 
-  removeAllMovable(): void {
+  static eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox): void {
+    if(!eaterCheesBox.pawnChees) {
+      return;
+    }
+    if(eatenCheesBox.pawnChees) {
+      this.graveyard.push(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color));
+    }
+    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color);
+    eaterCheesBox.pawnChees = null;
+  }
+
+  removeStatus(): void {
     for(let i = 0; i < 8; i++) {
       for(let j = 0; j < 8; j++) {
         this.board[i][j].isMoveable = false;
+        this.board[i][j].isEatable = false;
       }
     }
   }

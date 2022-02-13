@@ -23,7 +23,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     let _row = row + 1;
     let _column = column + 1;
     while(_row <= 7 && _column <= 7) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -34,7 +34,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     _row = row - 1;
     _column = column + 1;
     while(_row >= 0 && _column <= 7) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -45,7 +45,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     _row = row - 1;
     _column = column - 1;
     while(_row >= 0 && _column >= 0) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -56,7 +56,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     _row = row + 1;
     _column = column - 1;
     while(_row <= 7 && _column >= 0) {
-      this.setMovable(board[_row][_column]);
+      this.setCheesBoxStatus(board[_row][_column], this.color);
       if(!board[_row][_column].isMoveable) {
         break;
       } else {
@@ -67,7 +67,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
 
     _row = row + 1;
     while(_row <= 7) {
-      this.setMovable(board[_row][column]);
+      this.setCheesBoxStatus(board[_row][column], this.color);
       if(!board[_row][column].isMoveable) {
         break;
       } else {
@@ -76,7 +76,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     }
     _row = row - 1;
     while(_row >= 0) {
-      this.setMovable(board[_row][column]);
+      this.setCheesBoxStatus(board[_row][column], this.color);
       if(!board[_row][column].isMoveable) {
         break;
       } else {
@@ -85,7 +85,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     }
     _column = column + 1;
     while(_column <= 7) {
-      this.setMovable(board[row][_column]);
+      this.setCheesBoxStatus(board[row][_column], this.color);
       if(!board[row][_column].isMoveable) {
         break;
       } else {
@@ -94,7 +94,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     }
     _column = column - 1;
     while(_column >= 0) {
-      this.setMovable(board[row][_column]);
+      this.setCheesBoxStatus(board[row][_column], this.color);
       if(!board[row][_column].isMoveable) {
         break;
       } else {
@@ -103,101 +103,101 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
     }
 
     if(row + 2 <= 7 && column + 1 <= 7) {
-      this.setMovable(board[row + 2][column + 1])
+      this.setCheesBoxStatus(board[row + 2][column + 1], this.color)
     }
     if(row + 2 <= 7 && column - 1 >= 0) {
-      this.setMovable(board[row + 2][column - 1])
+      this.setCheesBoxStatus(board[row + 2][column - 1], this.color)
     }
     if(row + 1 <= 7 && column + 2 <= 7) {
-      this.setMovable(board[row + 1][column + 2])
+      this.setCheesBoxStatus(board[row + 1][column + 2], this.color)
     }
     if(row - 1 >= 0 && column + 2 <= 7) {
-      this.setMovable(board[row - 1][column + 2])
+      this.setCheesBoxStatus(board[row - 1][column + 2], this.color)
     }
     if(row - 2 >= 0 && column + 1 <= 7) {
-      this.setMovable(board[row - 2][column + 1])
+      this.setCheesBoxStatus(board[row - 2][column + 1], this.color)
     }
     if(row - 2 >= 0 && column - 1 >= 0) {
-      this.setMovable(board[row - 2][column - 1])
+      this.setCheesBoxStatus(board[row - 2][column - 1], this.color)
     }
     if(row + 1 <= 7 && column - 2 >= 0) {
-      this.setMovable(board[row + 1][column - 2])
+      this.setCheesBoxStatus(board[row + 1][column - 2], this.color)
     }
     if(row - 1 >= 0 && column - 2 >= 0) {
-      this.setMovable(board[row - 1][column - 2])
+      this.setCheesBoxStatus(board[row - 1][column - 2], this.color)
     }
     if(row + 1 <= 7 && column + 2 <= 7) {
-      this.setMovable(board[row + 1][column + 2])
+      this.setCheesBoxStatus(board[row + 1][column + 2], this.color)
     }
     if(row + 1 <= 7 && column - 2 >= 0) {
-      this.setMovable(board[row + 1][column - 2])
+      this.setCheesBoxStatus(board[row + 1][column - 2], this.color)
     }
     if(row - 1 >= 0 && column + 2 <= 7) {
-      this.setMovable(board[row - 1][column + 2])
+      this.setCheesBoxStatus(board[row - 1][column + 2], this.color)
     }
     if(row - 1 >= 0 && column - 2 >= 0) {
-      this.setMovable(board[row - 1][column - 2])
+      this.setCheesBoxStatus(board[row - 1][column - 2], this.color)
     }
     if(row + 2 <= 7 && column + 1 <= 7) {
-      this.setMovable(board[row + 2][column + 1])
+      this.setCheesBoxStatus(board[row + 2][column + 1], this.color)
     }
     if(row + 2 <= 7 && column - 1 >= 0) {
-      this.setMovable(board[row + 2][column - 1])
+      this.setCheesBoxStatus(board[row + 2][column - 1], this.color)
     }
     if(row - 2 >= 0 && column + 1 <= 7) {
-      this.setMovable(board[row - 2][column + 1])
+      this.setCheesBoxStatus(board[row - 2][column + 1], this.color)
     }
     if(row - 2 >= 0 && column - 1 >= 0) {
-      this.setMovable(board[row - 2][column - 1])
+      this.setCheesBoxStatus(board[row - 2][column - 1], this.color)
     }
 
     if(row + 2 <= 7 && column + 1 <= 7) {
-      this.setMovable(board[row + 2][column + 1])
+      this.setCheesBoxStatus(board[row + 2][column + 1], this.color)
     }
     if(row + 2 <= 7 && column - 1 >= 0) {
-      this.setMovable(board[row + 2][column - 1])
+      this.setCheesBoxStatus(board[row + 2][column - 1], this.color)
     }
     if(row + 1 <= 7 && column + 2 <= 7) {
-      this.setMovable(board[row + 1][column + 2])
+      this.setCheesBoxStatus(board[row + 1][column + 2], this.color)
     }
     if(row - 1 >= 0 && column + 2 <= 7) {
-      this.setMovable(board[row - 1][column + 2])
+      this.setCheesBoxStatus(board[row - 1][column + 2], this.color)
     }
     if(row - 2 >= 0 && column + 1 <= 7) {
-      this.setMovable(board[row - 2][column + 1])
+      this.setCheesBoxStatus(board[row - 2][column + 1], this.color)
     }
     if(row - 2 >= 0 && column - 1 >= 0) {
-      this.setMovable(board[row - 2][column - 1])
+      this.setCheesBoxStatus(board[row - 2][column - 1], this.color)
     }
     if(row + 1 <= 7 && column - 2 >= 0) {
-      this.setMovable(board[row + 1][column - 2])
+      this.setCheesBoxStatus(board[row + 1][column - 2], this.color)
     }
     if(row - 1 >= 0 && column - 2 >= 0) {
-      this.setMovable(board[row - 1][column - 2])
+      this.setCheesBoxStatus(board[row - 1][column - 2], this.color)
     }
     if(row + 1 <= 7 && column + 2 <= 7) {
-      this.setMovable(board[row + 1][column + 2])
+      this.setCheesBoxStatus(board[row + 1][column + 2], this.color)
     }
     if(row + 1 <= 7 && column - 2 >= 0) {
-      this.setMovable(board[row + 1][column - 2])
+      this.setCheesBoxStatus(board[row + 1][column - 2], this.color)
     }
     if(row - 1 >= 0 && column + 2 <= 7) {
-      this.setMovable(board[row - 1][column + 2])
+      this.setCheesBoxStatus(board[row - 1][column + 2], this.color)
     }
     if(row - 1 >= 0 && column - 2 >= 0) {
-      this.setMovable(board[row - 1][column - 2])
+      this.setCheesBoxStatus(board[row - 1][column - 2], this.color)
     }
     if(row + 2 <= 7 && column + 1 <= 7) {
-      this.setMovable(board[row + 2][column + 1])
+      this.setCheesBoxStatus(board[row + 2][column + 1], this.color)
     }
     if(row + 2 <= 7 && column - 1 >= 0) {
-      this.setMovable(board[row + 2][column - 1])
+      this.setCheesBoxStatus(board[row + 2][column - 1], this.color)
     }
     if(row - 2 >= 0 && column + 1 <= 7) {
-      this.setMovable(board[row - 2][column + 1])
+      this.setCheesBoxStatus(board[row - 2][column + 1], this.color)
     }
     if(row - 2 >= 0 && column - 1 >= 0) {
-      this.setMovable(board[row - 2][column - 1])
+      this.setCheesBoxStatus(board[row - 2][column - 1], this.color)
     }
   }
 }

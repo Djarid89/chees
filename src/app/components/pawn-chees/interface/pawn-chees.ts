@@ -1,8 +1,8 @@
 import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
 
 export interface IPawnChees {
-  type: IPawnCheesType;
-  color: IPawnTeam;
+  type: IPawnCheesType | undefined;
+  color: IPawnTeam | undefined;
   
   setCheesBoxesMovable: (board: CheesBox[][], row: number, column: number) => void;
 }

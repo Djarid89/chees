@@ -5,12 +5,14 @@ export class CheesBox {
   column: number;
   pawnChees: PawnChees | null;
   isMoveable: boolean;
+  isEatable: boolean;
 
   constructor(row: number, column: number, pawnChees?: PawnChees | null) {
     this.row = row;
     this.column = column;
     this.pawnChees = pawnChees || null;
     this.isMoveable = false;
+    this.isEatable = false;
   }
 
   isPair(): boolean {

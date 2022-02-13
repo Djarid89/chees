@@ -21,7 +21,7 @@ export class ChessboardComponent implements OnInit {
     this.cheesboard = new Cheesboard();
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
-    this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeAllMovable() });
+    this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeStatus() });
     this.connector.passTurn$.subscribe({ next: (pawnTeam: IPawnTeam) => this.currentTeam = pawnTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black });
   }
 

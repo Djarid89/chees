@@ -22,7 +22,7 @@ export class RookComponent extends BasePawnChees implements IPawnChees {
   setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
     let _row = row + 1;
     while(_row <= 7) {
-      this.setMovable(board[_row][column]);
+      this.setCheesBoxStatus(board[_row][column], this.color);
       if(!board[_row][column].isMoveable) {
         break;
       } else {
@@ -31,7 +31,7 @@ export class RookComponent extends BasePawnChees implements IPawnChees {
     }
     _row = row - 1;
     while(_row >= 0) {
-      this.setMovable(board[_row][column]);
+      this.setCheesBoxStatus(board[_row][column], this.color);
       if(!board[_row][column].isMoveable) {
         break;
       } else {
@@ -40,7 +40,7 @@ export class RookComponent extends BasePawnChees implements IPawnChees {
     }
     let _column = column + 1;
     while(_column <= 7) {
-      this.setMovable(board[row][_column]);
+      this.setCheesBoxStatus(board[row][_column], this.color);
       if(!board[row][_column].isMoveable) {
         break;
       } else {
@@ -49,7 +49,7 @@ export class RookComponent extends BasePawnChees implements IPawnChees {
     }
     _column = column - 1;
     while(_column >= 0) {
-      this.setMovable(board[row][_column]);
+      this.setCheesBoxStatus(board[row][_column], this.color);
       if(!board[row][_column].isMoveable) {
         break;
       } else {
