@@ -1,4 +1,5 @@
 import { Component, ContentChild, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ConnectorService } from 'src/app/service/connector.service';
 import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
 import { Cheesboard } from '../chessboard/class/cheesBoard';
@@ -13,23 +14,28 @@ import { IPawnChees } from './interface/pawn-chees';
 export class PawnCheesComponent {
   @Input() cheesBox!: CheesBox;
   @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
-  @Output() removeAllMovable = new EventEmitter();
   @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
   @HostListener('mousedown') mouseDownEvent() { this.mouseDown() }
   @HostListener('mouseup') mouseup() { this.release() }
   @HostListener('dragend') dropEvent() { this.release() }
+  moveCheesSubscription!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
 
   mouseDown(): void {
     if(this.pawnBase) {
-      this.connector.movePawnChees$.subscribe({ next: (toCheesBox: CheesBox) => Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox)});
+      this.moveCheesSubscription = this.connector.movePawnChees$.subscribe({
+        next: (toCheesBox: CheesBox) => {
+          Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox);
+          this.moveCheesSubscription.unsubscribe();
+        }
+        });
       this.showAvaibleMovement.emit(this.pawnBase);
     }
   }
   
   release(): void {
     this.connector.movePawnChees$.next(this.cheesBox);
-    this.removeAllMovable.emit();
+    this.connector.removeAllMovable$.next();
   }
 }

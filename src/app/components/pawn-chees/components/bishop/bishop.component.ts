@@ -20,6 +20,45 @@ export class BishopComponent implements IPawnChees {
   IPawnTeam = IPawnTeam;
 
   setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
-    
+    // do {
+    //   row++;
+    //   column++;
+    // } while(row <= 7 && column <= 7) {
+    //   this.setMovable(board[row][column]);
+    //   if(!board[row][column].isMoveable) {
+    //     return;
+    //   }
+    // }
+    // do {
+    //   row--;
+    //   column++;
+    // } while(row >= 0 && column <= 7) {
+    //   this.setMovable(board[row][column]);
+    //   if(!board[row][column].isMoveable) {
+    //     return;
+    //   }
+    // }
+    // do {
+    //   row--;
+    //   column--;
+    // } while(row >= 0 && column >= 0) {
+    //   this.setMovable(board[row][column]);
+    //   if(!board[row][column].isMoveable) {
+    //     return;
+    //   }
+    // }
+    // do {
+    //   row++;
+    //   column--;
+    // } while(row <= 7 && column >= 0) {
+    //   this.setMovable(board[row][column]);
+    //   if(!board[row][column].isMoveable) {
+    //     return;
+    //   }
+    // }
+  }
+
+  private setMovable(cheesBox: CheesBox): void {
+    cheesBox.isMoveable = cheesBox.pawnChees === null;
   }
 }

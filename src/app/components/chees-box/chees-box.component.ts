@@ -16,8 +16,4 @@ export class CheesBoxComponent {
   propagateShowAvaibleMovement(pawnChees: IPawnChees) {
     this.showAvaibleMovement.emit(pawnChees);
   }
-
-  propagateRemoveAllMovable() {
-    this.removeAllMovable.emit();
-  }
 }

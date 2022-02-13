@@ -14,23 +14,18 @@ export class ChessboardComponent implements OnInit {
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
 
-  constructor(private readonly connector: ConnectorService) {
-
-  }
+  constructor(private readonly connector: ConnectorService) { }
 
   ngOnInit(): void {
     this.cheesboard = new Cheesboard();
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
+    this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeAllMovable() });
   }
 
   showAvaibleMovement(pawnChees: IPawnChees, row: number, column: number) {
     if(pawnChees) {
       pawnChees.setCheesBoxMovable(this.cheesboard?.board, row, column);
     }
-  }
-
-  removeAllMovable(): void {
-    this.cheesboard.removeAllMovable();
   }
 }
