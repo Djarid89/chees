@@ -25,7 +25,7 @@ export class ChessboardComponent implements OnInit {
 
   showAvaibleMovement(pawnChees: IPawnChees, row: number, column: number) {
     if(pawnChees) {
-      pawnChees.setCheesBoxMovable(this.cheesboard?.board, row, column);
+      pawnChees.setCheesBoxesMovable(this.cheesboard?.board, row, column);
     }
   }
 }

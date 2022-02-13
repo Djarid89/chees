@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
-import { IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
+import { BasePawnChees } from '../../class/base-pawn-chees';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
 @Component({
@@ -14,19 +15,34 @@ import { PAWN_CHEES } from '../pawn-chees.token';
     }
   ]
 })
-export class KingComponent implements OnInit {
+export class KingComponent extends BasePawnChees implements IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
-  IPawnTeam = IPawnTeam;
 
-  constructor() {
+  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
+    if(row + 1 <= 7 && column + 1 <= 7) {
+      this.setMovable(board[row + 1][column + 1]);
+    }
+    if(column + 1 <= 7) {
+      this.setMovable(board[row][column + 1]);
+    }
+    if(row - 1 >= 0 && column + 1 <= 7) {
+      this.setMovable(board[row - 1][column + 1]);
+    }
+    if(row - 1 >= 0) {
+      this.setMovable(board[row - 1][column]);
+    }
+    if(row - 1 >= 0 && column - 1 >= 0) {
+      this.setMovable(board[row - 1][column - 1]);
+    }
+    if(column - 1 >= 0) {
+      this.setMovable(board[row][column - 1]);
+    }
+    if(row + 1 <= 7 &&  column - 1 >= 0) {
+      this.setMovable(board[row + 1][column - 1]);
+    }
+    if(row + 1 <= 7) {
+      this.setMovable(board[row + 1][column]);
+    }
   }
-
-  setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
-    
-  }
-  
-  ngOnInit(): void {
-  }
-
 }

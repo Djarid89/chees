@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
@@ -14,51 +15,54 @@ import { PAWN_CHEES } from '../pawn-chees.token';
     }
   ]
 })
-export class BishopComponent implements IPawnChees {
+export class BishopComponent extends BasePawnChees implements IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
-  IPawnTeam = IPawnTeam;
 
-  setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
-    // do {
-    //   row++;
-    //   column++;
-    // } while(row <= 7 && column <= 7) {
-    //   this.setMovable(board[row][column]);
-    //   if(!board[row][column].isMoveable) {
-    //     return;
-    //   }
-    // }
-    // do {
-    //   row--;
-    //   column++;
-    // } while(row >= 0 && column <= 7) {
-    //   this.setMovable(board[row][column]);
-    //   if(!board[row][column].isMoveable) {
-    //     return;
-    //   }
-    // }
-    // do {
-    //   row--;
-    //   column--;
-    // } while(row >= 0 && column >= 0) {
-    //   this.setMovable(board[row][column]);
-    //   if(!board[row][column].isMoveable) {
-    //     return;
-    //   }
-    // }
-    // do {
-    //   row++;
-    //   column--;
-    // } while(row <= 7 && column >= 0) {
-    //   this.setMovable(board[row][column]);
-    //   if(!board[row][column].isMoveable) {
-    //     return;
-    //   }
-    // }
-  }
-
-  private setMovable(cheesBox: CheesBox): void {
-    cheesBox.isMoveable = cheesBox.pawnChees === null;
+  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
+    let _row = row + 1;
+    let _column = column + 1;
+    while(_row <= 7 && _column <= 7) {
+      this.setMovable(board[_row][_column]);
+      if(!board[_row][_column].isMoveable) {
+        break;
+      } else {
+        _row++;
+        _column++;
+      }
+    }
+    _row = row - 1;
+    _column = column + 1;
+    while(_row >= 0 && _column <= 7) {
+      this.setMovable(board[_row][_column]);
+      if(!board[_row][_column].isMoveable) {
+        break;
+      } else {
+        _row--;
+        _column++;
+      }
+    }
+    _row = row - 1;
+    _column = column - 1;
+    while(_row >= 0 && _column >= 0) {
+      this.setMovable(board[_row][_column]);
+      if(!board[_row][_column].isMoveable) {
+        break;
+      } else {
+        _row--;
+        _column--;
+      }
+    }
+    _row = row + 1;
+    _column = column - 1;
+    while(_row <= 7 && _column >= 0) {
+      this.setMovable(board[_row][_column]);
+      if(!board[_row][_column].isMoveable) {
+        break;
+      } else {
+        _row++;
+        _column--;
+      }
+    }
   }
 }

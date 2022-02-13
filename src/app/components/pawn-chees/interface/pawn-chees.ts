@@ -4,7 +4,7 @@ export interface IPawnChees {
   type: IPawnCheesType;
   color: IPawnTeam;
   
-  setCheesBoxMovable: (board: CheesBox[][], row: number, column: number) => void;
+  setCheesBoxesMovable: (board: CheesBox[][], row: number, column: number) => void;
 }
 
 export enum IPawnCheesType {
