@@ -25,14 +25,14 @@ export class PawnComponent extends BasePawnChees implements IPawnChees {
       if(row + 1 <= 7) {
         this.setMovable(board[row + 1][column]);
       }
-      if(Cheesboard.isFirstMove && row + 2 <= 7) {
+      if(Cheesboard.isFirstMoveBlack && row + 2 <= 7) {
         this.setMovable(board[row + 2][column]);
       }
     } else {
       if(row - 1 >= 0) {
         this.setMovable(board[row - 1][column]);
       }
-      if(Cheesboard.isFirstMove && row - 2 >= 0) {
+      if(Cheesboard.isFirstMoveWhite && row - 2 >= 0) {
         this.setMovable(board[row - 2][column]);
       }
     }

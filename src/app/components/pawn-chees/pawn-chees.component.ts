@@ -28,8 +28,9 @@ export class PawnCheesComponent {
         next: (toCheesBox: CheesBox) => {
           Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox);
           this.moveCheesSubscription.unsubscribe();
+          this.connector.passTurn$.next(this.pawnBase.color);
         }
-        });
+      });
       this.showAvaibleMovement.emit(this.pawnBase);
     }
   }

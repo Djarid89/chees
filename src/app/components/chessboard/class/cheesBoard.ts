@@ -3,7 +3,8 @@ import { IPawnChees, IPawnCheesType, IPawnTeam } from "../../pawn-chees/interfac
 
 export class Cheesboard {
   board!: CheesBox[][];
-  static isFirstMove = true;
+  static isFirstMoveWhite = true;
+  static isFirstMoveBlack = true;
 
   constructor() {
     this.board = [];
@@ -35,7 +36,11 @@ export class Cheesboard {
     }
     formCheesBox.pawnChees = null;
     toCheesBox.pawnChees = new PawnChees(pawnChees.type, pawnChees.color);
-    this.isFirstMove = false;
+    if(pawnChees.color === IPawnTeam.white) {
+      this.isFirstMoveWhite = false;
+    } else {
+      this.isFirstMoveBlack = false;
+    }
   }
 
   removeAllMovable(): void {
