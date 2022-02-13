@@ -23,6 +23,7 @@ export class ChessboardComponent implements OnInit {
     this.cheesboard.initWhiteTeam();
     this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeStatus() });
     this.connector.passTurn$.subscribe({ next: (pawnTeam: IPawnTeam) => this.currentTeam = pawnTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black });
+    this.connector.checkWinningCondition$.subscribe({ next: () => this.cheesboard.checkWinningCondition(this.currentTeam) })
   }
 
   showAvaibleMovement(pawnChees: IPawnChees, row: number, column: number) {

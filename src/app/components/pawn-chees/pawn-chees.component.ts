@@ -33,6 +33,7 @@ export class PawnCheesComponent {
               } else if(toCheesBox.isEatable) {
                 Cheesboard.eatPawnChees(this.cheesBox, toCheesBox);
               }
+              this.connector.checkWinningCondition$.next();
               this.connector.passTurn$.next(this.pawnBase.color);
             }
           }

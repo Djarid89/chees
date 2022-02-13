@@ -10,6 +10,7 @@ export class ConnectorService {
   movePawnChees$ = new Subject<CheesBox>();
   removeAllMovable$ = new Subject<void>();
   passTurn$ = new Subject<IPawnTeam>();
+  checkWinningCondition$ = new Subject<void>();
 
   constructor() { }
 }

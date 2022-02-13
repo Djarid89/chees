@@ -31,6 +31,24 @@ export class Cheesboard {
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
   }
 
+  checkWinningCondition(color: IPawnTeam): boolean {
+    const king = this.getKing(color);
+    let result = false;
+    return result;
+  }
+
+  private getKing(color: IPawnTeam): CheesBox | null {
+    let result = null;
+    this.board.forEach((row: CheesBox[]) => {
+      row.forEach((cheesBox: CheesBox) => {
+        if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) {
+          result = cheesBox.pawnChees;
+        }
+      })
+    })
+    return null;
+  }
+
   static movePawnChees(formCheesBox: CheesBox, toCheesBox: CheesBox): void {
     if(!formCheesBox.pawnChees) {
       return;
