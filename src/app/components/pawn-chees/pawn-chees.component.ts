@@ -26,9 +26,11 @@ export class PawnCheesComponent {
     if(this.pawnBase) {
       this.moveCheesSubscription = this.connector.movePawnChees$.subscribe({
         next: (toCheesBox: CheesBox) => {
-          Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox);
+          if(this.cheesBox != toCheesBox) {
+            Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox);
+            this.connector.passTurn$.next(this.pawnBase.color);
+          }
           this.moveCheesSubscription.unsubscribe();
-          this.connector.passTurn$.next(this.pawnBase.color);
         }
       });
       this.showAvaibleMovement.emit(this.pawnBase);
