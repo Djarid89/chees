@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CheesBox, PawnChees } from 'src/app/components/chees-box/class/chees-box';
-import { IPawnChees, IPawnTeam } from '../../interface/pawn-chees';
+import { Component, Input } from '@angular/core';
+import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
 @Component({
@@ -14,8 +14,9 @@ import { PAWN_CHEES } from '../pawn-chees.token';
     }
   ]
 })
-export class RookComponent implements OnInit, IPawnChees {
-  @Input() pawnChees!: PawnChees;
+export class RookComponent implements IPawnChees {
+  @Input() type!: IPawnCheesType;
+  @Input() color!: IPawnTeam;
   IPawnTeam = IPawnTeam;
 
   constructor() {
@@ -24,8 +25,4 @@ export class RookComponent implements OnInit, IPawnChees {
   setCheesBoxMovable(board: CheesBox[][], row: number, column: number) {
 
   }
-
-  ngOnInit(): void {
-  }
-
 }

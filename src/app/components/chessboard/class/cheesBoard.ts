@@ -1,8 +1,9 @@
 import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
-import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
+import { IPawnChees, IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
 
 export class Cheesboard {
-  public board!: CheesBox[][];
+  board!: CheesBox[][];
+  static isFirstMove = true;
 
   constructor() {
     this.board = [];
@@ -28,7 +29,16 @@ export class Cheesboard {
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
   }
 
-  removeAllMovable() {
+  static movePawnChees(pawnChees: IPawnChees, formCheesBox: CheesBox, toCheesBox: CheesBox): void {
+    if(!toCheesBox.isMoveable || !pawnChees) {
+      return;
+    }
+    formCheesBox.pawnChees = null;
+    toCheesBox.pawnChees = new PawnChees(pawnChees.type, pawnChees.color);
+    this.isFirstMove = false;
+  }
+
+  removeAllMovable(): void {
     for(let i = 0; i < 8; i++) {
       for(let j = 0; j < 8; j++) {
         this.board[i][j].isMoveable = false;

@@ -1,6 +1,7 @@
-import { Component, ContentChild, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { ConnectorService } from 'src/app/service/connector.service';
 import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
+import { Cheesboard } from '../chessboard/class/cheesBoard';
 import { PAWN_CHEES } from './components/pawn-chees.token';
 import { IPawnChees } from './interface/pawn-chees';
 
@@ -10,29 +11,25 @@ import { IPawnChees } from './interface/pawn-chees';
   styleUrls: ['./pawn-chees.component.scss']
 })
 export class PawnCheesComponent {
-  @Output() mouseDown = new EventEmitter<IPawnChees>();
-  @Output() drop = new EventEmitter();
+  @Input() cheesBox!: CheesBox;
+  @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
+  @Output() removeAllMovable = new EventEmitter();
   @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
-  @HostListener('mousedown') mouseDownEvent() { this.grab() }
+  @HostListener('mousedown') mouseDownEvent() { this.mouseDown() }
   @HostListener('mouseup') mouseup() { this.release() }
   @HostListener('dragend') dropEvent() { this.release() }
 
   constructor(private readonly connector: ConnectorService) { }
 
-  grab(): void {
+  mouseDown(): void {
     if(this.pawnBase) {
-      this.connector.pawnCheeseAdder$.subscribe({ next: (cheesBox: CheesBox) => this.setPawnCheesType(cheesBox) }); // bisogna completare sta roba
-      this.mouseDown.emit(this.pawnBase);
+      this.connector.movePawnChees$.subscribe({ next: (toCheesBox: CheesBox) => Cheesboard.movePawnChees(this.pawnBase, this.cheesBox, toCheesBox)});
+      this.showAvaibleMovement.emit(this.pawnBase);
     }
   }
-
-  private setPawnCheesType(cheesBox: CheesBox): void {
-    if(this.pawnBase) {
-      cheesBox.pawnChees = new PawnChees(this.pawnBase.pawnChees.type, this.pawnBase.pawnChees.color);
-    }
-  }
-
+  
   release(): void {
-    this.drop.emit();
+    this.connector.movePawnChees$.next(this.cheesBox);
+    this.removeAllMovable.emit();
   }
 }

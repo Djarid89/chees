@@ -1,13 +1,13 @@
 <div [ngClass]="cheesBox.isPair() ? 'white' : 'brown'" [class.isMovable]="cheesBox.isMoveable">
-  <pawn-chees (mouseDown)="propagateMouseDown($event)" (drop)="propagateDropEnd()">
+  <pawn-chees [cheesBox]="cheesBox" (showAvaibleMovement)="propagateShowAvaibleMovement($event)" (removeAllMovable)="propagateRemoveAllMovable()">
     <ng-container *ngIf="cheesBox.pawnChees">
       <ng-container [ngSwitch]="cheesBox.pawnChees.type">
-        <pawn [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
-        <bishop [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.bishop"></bishop>
-        <king [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.king"></king>
-        <knight [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.knight"></knight>
-        <queen [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.queen"></queen>
-        <rook [pawnChees]="cheesBox.pawnChees" *ngSwitchCase="IPawnCheesType.rook"></rook>
+        <pawn [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
+        <bishop [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.bishop"></bishop>
+        <king [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.king"></king>
+        <knight [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.knight"></knight>
+        <queen [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.queen"></queen>
+        <rook [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" *ngSwitchCase="IPawnCheesType.rook"></rook>
       </ng-container>
     </ng-container>
   </pawn-chees>

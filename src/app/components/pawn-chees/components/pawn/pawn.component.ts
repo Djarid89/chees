@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CheesBox, PawnChees } from 'src/app/components/chees-box/class/chees-box';
-import { ConnectorService } from 'src/app/service/connector.service';
+import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
 
@@ -16,24 +16,23 @@ import { PAWN_CHEES } from '../pawn-chees.token';
   ]
 })
 export class PawnComponent implements IPawnChees {
-  @Input() pawnChees!: PawnChees;
+  @Input() type!: IPawnCheesType;
+  @Input() color!: IPawnTeam;
   IPawnTeam = IPawnTeam;
 
-  constructor(private readonly connector: ConnectorService) { }
-
   setCheesBoxMovable(board: CheesBox[][], row: number, column: number): void {
-    if(this.pawnChees.color === IPawnTeam.black) {
+    if(this.color === IPawnTeam.black) {
       if(row + 1 <= 7) {
         this.setMovable(board[row + 1][column]);
       }
-      if(this.connector.isFirstMove && row + 2 <= 7) {
+      if(Cheesboard.isFirstMove && row + 2 <= 7) {
         this.setMovable(board[row + 2][column]);
       }
     } else {
       if(row - 1 >= 0) {
         this.setMovable(board[row - 1][column]);
       }
-      if(this.connector.isFirstMove && row - 2 >= 0) {
+      if(Cheesboard.isFirstMove && row - 2 >= 0) {
         this.setMovable(board[row - 2][column]);
       }
     }

@@ -6,9 +6,7 @@ import { CheesBox } from '../components/chees-box/class/chees-box';
   providedIn: 'root'
 })
 export class ConnectorService {
-  pawnCheeseAdder$ = new Subject<CheesBox>();
-  pawnCheeseDeleter$ = new Subject<CheesBox>();
-  isFirstMove = true;
+  movePawnChees$ = new Subject<CheesBox>();
 
   constructor() { }
 }

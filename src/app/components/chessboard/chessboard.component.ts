@@ -30,7 +30,7 @@ export class ChessboardComponent implements OnInit {
     }
   }
 
-  dropPawnChees(): void {
+  removeAllMovable(): void {
     this.cheesboard.removeAllMovable();
   }
 }
