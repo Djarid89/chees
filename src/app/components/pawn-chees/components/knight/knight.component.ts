@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { IBoardColor } from 'src/app/shared/interface/shared';
 import { ConnectorService } from '../../../../service/connector.service';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
@@ -28,8 +29,10 @@ export class KnightComponent extends BasePawnChees implements IPawnChees {
 
   ngOnInit(): void {
     this.connector.updateAllCanEat$.subscribe({
-      next: (board: CheesBox[][]) => {
-        this.setCheesBoxesCanEat(board);
+      next: (boardColor: IBoardColor) => {
+        if(boardColor.color === this.color) {
+          this.setCheesBoxesCanEat(boardColor.board);
+        }
       }
     })
   }

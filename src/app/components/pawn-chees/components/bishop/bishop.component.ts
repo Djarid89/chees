@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { IBoardColor } from 'src/app/shared/interface/shared';
 import { ConnectorService } from '../../../../service/connector.service';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -28,8 +29,10 @@ export class BishopComponent extends BasePawnChees implements IPawnChees {
 
   ngOnInit(): void {
     this.connector.updateAllCanEat$.subscribe({
-      next: (board: CheesBox[][]) => {
-        this.setCheesBoxesCanEat(board);
+      next: (boardColor: IBoardColor) => {
+        if(boardColor.color === this.color) {
+          this.setCheesBoxesCanEat(boardColor.board);
+        }
       }
     })
   }

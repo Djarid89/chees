@@ -29,6 +29,7 @@ export class PawnCheesComponent {
       this.moveCheesSubscription = this.connector.movePawnChees$.subscribe({
         next: (toCheesBox: CheesBox) => {
           if(this.cheesBox === toCheesBox || !toCheesBox) {
+            this.moveCheesSubscription.unsubscribe();
             return;
           }
 

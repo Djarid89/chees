@@ -15,6 +15,7 @@ export class ChessboardComponent implements OnInit {
   letter = ['A','B','C','D','E','F','G','H'];
   currentTeam = IPawnTeam.white;
   initSubscription!: Subscription;
+  winningTeam!: IPawnTeam;
 
   constructor(private readonly connector: ConnectorService) { }
 
@@ -23,16 +24,17 @@ export class ChessboardComponent implements OnInit {
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
     this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeStatus() });
+    this.connector.isGameWinning$.subscribe({ next: (pawnTeam: IPawnTeam) => this.winningTeam = pawnTeam });
     this.connector.passTurn$.subscribe({
       next: (pawnTeam: IPawnTeam) => {
-        this.currentTeam = pawnTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black;
         this.cheesboard.resetCheesBoxCanEat();
         setTimeout(() => {
-          this.connector.updateAllCanEat$.next(this.cheesboard.board);
-          if(pawnTeam === IPawnTeam.black) {
-            this.connector.isCapturedWhite$.next(this.cheesboard.board);
+          const oppositeColor = pawnTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black;
+          this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: pawnTeam });
+          if(this.cheesboard.isKingUnderCheck(oppositeColor)) {
+            this.connector.isKingCaptured$.next(this.cheesboard.board);
           } else {
-            this.connector.isCapturedBlack$.next(this.cheesboard.board);
+            this.currentTeam = oppositeColor;
           }
         })
       } });

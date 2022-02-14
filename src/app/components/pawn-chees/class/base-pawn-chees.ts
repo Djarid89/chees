@@ -4,14 +4,16 @@ import { IPawnCheesType, IPawnTeam } from "../interface/pawn-chees";
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
 
-  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam, canBeEatable: boolean): void {
+  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam, canBeEatable: boolean, isKing = false): void {
     if(canBeEatable) {
       cheesBox.canBeEatable = true;
     } else {
-      cheesBox.isMoveable = cheesBox.pawnChees === null;
-      cheesBox.isEatable = false;
-      if(cheesBox.pawnChees && cheesBox.pawnChees.type !== IPawnCheesType.king) {
-        cheesBox.isEatable = this.isOppositeColor(cheesBox, color)
+      if(isKing) {
+        cheesBox.isMoveable = cheesBox.pawnChees === null && !cheesBox.canBeEatable;
+        cheesBox.isEatable = this.isOppositeColor(cheesBox, color) && !cheesBox.canBeEatable;
+      } else {
+        cheesBox.isMoveable = cheesBox.pawnChees === null;
+        cheesBox.isEatable = this.isOppositeColor(cheesBox, color);
       }
     }
   }

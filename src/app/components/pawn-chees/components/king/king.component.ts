@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
+import { IBoardColor } from 'src/app/shared/interface/shared';
 import { ConnectorService } from '../../../../service/connector.service';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -28,78 +29,73 @@ export class KingComponent extends BasePawnChees implements IPawnChees {
 
   ngOnInit(): void {
     this.connector.updateAllCanEat$.subscribe({
-      next: (board: CheesBox[][]) => {
-        this.setCheesBoxesCanEat(board);
+      next: (boardColor: IBoardColor) => {
+        if(boardColor.color === this.color) {
+          this.setCheesBoxesCanEat(boardColor.board);
+        }
       }
     })
-    if(this.color === IPawnTeam.white) {
-      this.connector.isCapturedWhite$.subscribe({
-        next: (board: CheesBox[][]) => this.isCaptured(board)
-      });
-    } else {
-      this.connector.isCapturedBlack$.subscribe({
-        next: (board: CheesBox[][]) => this.isCaptured(board)
-      });
-    }
+    this.connector.isKingCaptured$.subscribe({
+      next: (board: CheesBox[][]) => this.isCaptured(board)
+    });
   }
 
-  private isCaptured(board: CheesBox[][]) {
-    if(!board[this.row][this.column].isEatable) {
-      return false;
-    }
-
+  private isCaptured(board: CheesBox[][]): void {
     let isBlocked = true;
     if(this.row + 1 <= 7 && this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row + 1][this.column + 1].isEatable;
+      isBlocked = isBlocked && board[this.row + 1][this.column + 1].canBeEatable;
     }
     if(this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row][this.column + 1].isEatable;
+      isBlocked = isBlocked && board[this.row][this.column + 1].canBeEatable;
     }
     if(this.row - 1 >= 0 && this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row - 1][this.column + 1].isEatable;
+      isBlocked = isBlocked && board[this.row - 1][this.column + 1].canBeEatable;
     }
     if(this.row - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row - 1][this.column].isEatable;
+      isBlocked = isBlocked && board[this.row - 1][this.column].canBeEatable;
     }
     if(this.row - 1 >= 0 && this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row - 1][this.column - 1].isEatable;
+      isBlocked = isBlocked && board[this.row - 1][this.column - 1].canBeEatable;
     }
     if(this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row][this.column - 1].isEatable;
+      isBlocked = isBlocked && board[this.row][this.column - 1].canBeEatable;
     }
     if(this.row + 1 <= 7 &&  this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row + 1][this.column - 1].isEatable;
+      isBlocked = isBlocked && board[this.row + 1][this.column - 1].canBeEatable;
     }
     if(this.row + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row + 1][this.column].isEatable;
+      isBlocked = isBlocked && board[this.row + 1][this.column].canBeEatable;
     }
-    return isBlocked;
+
+    if(isBlocked) {
+      this.connector.isGameWinning$.next(board[this.row][this.column].pawnChees?.color);
+    }
   }
 
   setCheesBoxesStatus(board: CheesBox[][], row: number, column: number, canBeEatable = false) {
     if(row + 1 <= 7 && column + 1 <= 7) {
-      this.setCheesBoxStatus(board[row + 1][column + 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row + 1][column + 1], this.color, canBeEatable, true);
     }
     if(column + 1 <= 7) {
-      this.setCheesBoxStatus(board[row][column + 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row][column + 1], this.color, canBeEatable, true);
     }
     if(row - 1 >= 0 && column + 1 <= 7) {
-      this.setCheesBoxStatus(board[row - 1][column + 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row - 1][column + 1], this.color, canBeEatable, true);
     }
     if(row - 1 >= 0) {
-      this.setCheesBoxStatus(board[row - 1][column], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row - 1][column], this.color, canBeEatable, true);
     }
     if(row - 1 >= 0 && column - 1 >= 0) {
-      this.setCheesBoxStatus(board[row - 1][column - 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row - 1][column - 1], this.color, canBeEatable, true);
     }
     if(column - 1 >= 0) {
-      this.setCheesBoxStatus(board[row][column - 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row][column - 1], this.color, canBeEatable, true);
     }
     if(row + 1 <= 7 &&  column - 1 >= 0) {
-      this.setCheesBoxStatus(board[row + 1][column - 1], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row + 1][column - 1], this.color, canBeEatable, true);
     }
     if(row + 1 <= 7) {
-      this.setCheesBoxStatus(board[row + 1][column], this.color, canBeEatable);
+      this.setCheesBoxStatus(board[row + 1][column], this.color, canBeEatable, true);
     }
   }
 
