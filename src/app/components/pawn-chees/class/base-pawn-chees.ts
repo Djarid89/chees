@@ -14,15 +14,6 @@ export class BasePawnChees {
         cheesBox.isEatable = this.isOppositeColor(cheesBox, color)
       }
     }
-
-  }
-
-  unsetCanBeEatable(cheesBox: CheesBox): void {
-    cheesBox.canBeEatable = false;
-  }
-
-  setCanBeEatable(cheesBox: CheesBox): void {
-    cheesBox.canBeEatable = true;
   }
 
   isOppositeColor(cheesBox: CheesBox, color: IPawnTeam): boolean {

@@ -11,4 +11,6 @@ export class ConnectorService {
   removeAllMovable$ = new Subject<void>();
   passTurn$ = new Subject<IPawnTeam>();
   updateAllCanEat$ = new Subject<CheesBox[][]>();
+  isCapturedWhite$ = new Subject<CheesBox[][]>();
+  isCapturedBlack$ = new Subject<CheesBox[][]>();
 }

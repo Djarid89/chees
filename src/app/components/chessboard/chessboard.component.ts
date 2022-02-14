@@ -29,6 +29,11 @@ export class ChessboardComponent implements OnInit {
         this.cheesboard.resetCheesBoxCanEat();
         setTimeout(() => {
           this.connector.updateAllCanEat$.next(this.cheesboard.board);
+          if(pawnTeam === IPawnTeam.black) {
+            this.connector.isCapturedWhite$.next(this.cheesboard.board);
+          } else {
+            this.connector.isCapturedBlack$.next(this.cheesboard.board);
+          }
         })
       } });
   }
