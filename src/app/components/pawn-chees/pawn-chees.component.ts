@@ -1,6 +1,6 @@
 import { Component, ContentChild, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ConnectorService } from 'src/app/service/connector.service';
+import { ConnectorService } from '../../service/connector.service';
 import { CheesBox } from '../chees-box/class/chees-box';
 import { Cheesboard } from '../chessboard/class/cheesBoard';
 import { PAWN_CHEES } from './components/pawn-chees.token';
@@ -14,8 +14,6 @@ import { IPawnChees, IPawnCheesType } from './interface/pawn-chees';
 export class PawnCheesComponent {
   @Input() cheesBox!: CheesBox;
   @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
-  @Output() setCheesBoxesCanEat = new EventEmitter<IPawnChees>();
-  @Output() unSetCheesBoxesCanEat = new EventEmitter<IPawnChees>();
   @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
   @HostListener('mousedown') mouseDownEvent() { this.mouseDown() }
   @HostListener('mouseup') mouseup() { this.release() }
@@ -26,31 +24,26 @@ export class PawnCheesComponent {
 
   mouseDown(): void {
     if(this.pawnBase) {
-      this.unSetCheesBoxesCanEat.emit(this.pawnBase); // TODO
+      this.showAvaibleMovement.emit(this.pawnBase);
+
       this.moveCheesSubscription = this.connector.movePawnChees$.subscribe({
         next: (toCheesBox: CheesBox) => {
-          if(this.cheesBox !== toCheesBox || !toCheesBox) {
+          if(this.cheesBox === toCheesBox || !toCheesBox) {
             return;
           }
 
           if(toCheesBox.isMoveable) {
             Cheesboard.movePawnChees(this.cheesBox, toCheesBox);
-            this.passTurnAndUpdatePotential();
+            this.connector.passTurn$.next(this.pawnBase.color);
           } else if(toCheesBox.isEatable && toCheesBox.pawnChees?.type !== IPawnCheesType.king) {
             Cheesboard.eatPawnChees(this.cheesBox, toCheesBox);
-            this.passTurnAndUpdatePotential();
+            this.connector.passTurn$.next(this.pawnBase.color);
           }
 
           this.moveCheesSubscription.unsubscribe();
         }
       });
-      this.showAvaibleMovement.emit(this.pawnBase);
     }
-  }
-
-  private passTurnAndUpdatePotential(): void {
-    this.connector.passTurn$.next(this.pawnBase.color);
-    this.setCheesBoxesCanEat.emit(this.pawnBase);
   }
 
   release(): void {

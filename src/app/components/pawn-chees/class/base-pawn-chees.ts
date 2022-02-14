@@ -4,15 +4,32 @@ import { IPawnCheesType, IPawnTeam } from "../interface/pawn-chees";
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
 
-  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam): void {
-    cheesBox.isMoveable = cheesBox.pawnChees === null;
-    cheesBox.isEatable = false;
-    if(cheesBox.pawnChees && cheesBox.pawnChees.type !== IPawnCheesType.king) {
-      cheesBox.isEatable = cheesBox.pawnChees.color !== color;
+  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam, canBeEatable: boolean): void {
+    if(canBeEatable) {
+      cheesBox.canBeEatable = true;
+    } else {
+      cheesBox.isMoveable = cheesBox.pawnChees === null;
+      cheesBox.isEatable = false;
+      if(cheesBox.pawnChees && cheesBox.pawnChees.type !== IPawnCheesType.king) {
+        cheesBox.isEatable = this.isOppositeColor(cheesBox, color)
+      }
     }
+
   }
 
-  isOppositeColor(cheesBox: CheesBox | null, color: IPawnTeam): boolean {
-    return cheesBox?.pawnChees?.color !== color || false
+  unsetCanBeEatable(cheesBox: CheesBox): void {
+    cheesBox.canBeEatable = false;
+  }
+
+  setCanBeEatable(cheesBox: CheesBox): void {
+    cheesBox.canBeEatable = true;
+  }
+
+  isOppositeColor(cheesBox: CheesBox, color: IPawnTeam): boolean {
+    if(!cheesBox.pawnChees) {
+      return false;
+    } else {
+      return cheesBox.pawnChees.color !== color;
+    }
   }
 }

@@ -31,6 +31,14 @@ export class Cheesboard {
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
   }
 
+  resetCheesBoxCanEat(): void {
+    for(let i = 0; i < 8; i++) {
+      for(let j = 0; j < 8; j++) {
+        this.board[i][j].canBeEatable = false;
+      }
+    }
+  }
+
   static movePawnChees(formCheesBox: CheesBox, toCheesBox: CheesBox): void {
     if(!formCheesBox.pawnChees) {
       return;
