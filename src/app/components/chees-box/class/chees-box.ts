@@ -6,6 +6,7 @@ export class CheesBox {
   pawnChees: PawnChees | null;
   isMoveable: boolean;
   isEatable: boolean;
+  canBeEatable: boolean;
 
   constructor(row: number, column: number, pawnChees?: PawnChees | null) {
     this.row = row;
@@ -13,6 +14,7 @@ export class CheesBox {
     this.pawnChees = pawnChees || null;
     this.isMoveable = false;
     this.isEatable = false;
+    this.canBeEatable = false;
   }
 
   isPair(): boolean {

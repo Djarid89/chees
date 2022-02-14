@@ -10,10 +10,15 @@ import { CheesBox } from './class/chees-box';
 export class CheesBoxComponent {
   @Input() cheesBox!: CheesBox;
   @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
+  @Output() setCheesBoxesCanEat = new EventEmitter<IPawnChees>();
   @Output() removeAllMovable = new EventEmitter<IPawnChees>();
   IPawnCheesType = IPawnCheesType;
 
   propagateShowAvaibleMovement(pawnChees: IPawnChees) {
     this.showAvaibleMovement.emit(pawnChees);
+  }
+
+  propagateSetCheesBoxesCanEat(pawnChees: IPawnChees) {
+    this.setCheesBoxesCanEat.emit(pawnChees);
   }
 }

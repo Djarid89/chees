@@ -19,7 +19,7 @@ export class KnightComponent extends BasePawnChees implements IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
 
-  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
+  setCheesBoxesStatus(board: CheesBox[][], row: number, column: number) {
     if(row + 2 <= 7 && column + 1 <= 7) {
       this.setCheesBoxStatus(board[row + 2][column + 1], this.color)
     }

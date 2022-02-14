@@ -11,4 +11,8 @@ export class BasePawnChees {
       cheesBox.isEatable = cheesBox.pawnChees.color !== color;
     }
   }
+
+  isOppositeColor(cheesBox: CheesBox | null, color: IPawnTeam): boolean {
+    return cheesBox?.pawnChees?.color !== color || false
+  }
 }

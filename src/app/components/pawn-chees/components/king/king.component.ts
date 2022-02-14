@@ -19,7 +19,7 @@ export class KingComponent extends BasePawnChees implements IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
 
-  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
+  setCheesBoxesStatus(board: CheesBox[][], row: number, column: number) {
     if(row + 1 <= 7 && column + 1 <= 7) {
       this.setCheesBoxStatus(board[row + 1][column + 1], this.color);
     }

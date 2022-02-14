@@ -1,6 +1,5 @@
 import { Component, OnInit} from '@angular/core';
 import { ConnectorService } from 'src/app/service/connector.service';
-import { CheesBox } from '../chees-box/class/chees-box';
 import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
@@ -23,12 +22,17 @@ export class ChessboardComponent implements OnInit {
     this.cheesboard.initWhiteTeam();
     this.connector.removeAllMovable$.subscribe({ next: () => this.cheesboard.removeStatus() });
     this.connector.passTurn$.subscribe({ next: (pawnTeam: IPawnTeam) => this.currentTeam = pawnTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black });
-    this.connector.checkWinningCondition$.subscribe({ next: () => this.cheesboard.checkWinningCondition(this.currentTeam) })
   }
 
-  showAvaibleMovement(pawnChees: IPawnChees, row: number, column: number) {
+  showAvaibleMovement(pawnChees: IPawnChees, row: number, column: number): void {
     if(pawnChees && this.currentTeam === pawnChees.color) {
-      pawnChees.setCheesBoxesMovable(this.cheesboard?.board, row, column);
+      pawnChees.setCheesBoxesStatus(this.cheesboard?.board, row, column);
+    }
+  }
+
+  setCheesBoxesCanEat(pawnChees: IPawnChees, row: number, column: number): void {
+    if(pawnChees && this.currentTeam === pawnChees.color) {
+      pawnChees.setCheesBoxesCanEat(this.cheesboard?.board, row, column);
     }
   }
 }

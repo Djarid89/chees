@@ -19,7 +19,7 @@ export class QueenComponent extends BasePawnChees implements IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
 
-  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number) {
+  setCheesBoxesStatus(board: CheesBox[][], row: number, column: number) {
     let _row = row + 1;
     let _column = column + 1;
     while(_row <= 7 && _column <= 7) {

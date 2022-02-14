@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { CheesBox, PawnChees } from 'src/app/components/chees-box/class/chees-box';
+import { Component, Input, OnInit } from '@angular/core';
+import { CheesBox } from 'src/app/components/chees-box/class/chees-box';
 import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
+import { ConnectorService } from '../../../../service/connector.service';
+import { IBoardRowColumn } from '../../../../shared/interface/shared';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
@@ -16,44 +18,42 @@ import { PAWN_CHEES } from '../pawn-chees.token';
     }
   ]
 })
-export class PawnComponent extends BasePawnChees implements IPawnChees {
+export class PawnComponent extends BasePawnChees implements OnInit,IPawnChees {
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
 
-  setCheesBoxesMovable(board: CheesBox[][], row: number, column: number): void {
+  constructor(private readonly connector: ConnectorService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.connector.potentialMovePawnChees$.subscribe({
+      next: (boardRowColumn: IBoardRowColumn) => this.setCheesBoxesCanEat(boardRowColumn.board, boardRowColumn.row, boardRowColumn.column) });
+  }
+
+  setCheesBoxesStatus(board: CheesBox[][], row: number, column: number): void {
+    const _row = this.color === IPawnTeam.black ? row + 1 : row - 1;
+    const _doubleRow = this.color === IPawnTeam.black ? row + 2 : row - 2;
     if(this.color === IPawnTeam.black) {
-      if(row + 1 <= 7) {
-        board[row + 1][column].isMoveable = board[row + 1][column].pawnChees === null;
+      if(_row <= 7 && _row >= 0) {
+        board[_row][column].isMoveable = board[_row][column].pawnChees === null;
         if(column + 1 <= 7 && column - 1 >= 0) {
-          board[row + 1][column + 1].isEatable = false;
-          if(board[row + 1][column + 1].pawnChees) {
-            board[row + 1][column + 1].isEatable = board[row + 1][column + 1].pawnChees?.color !== this.color; 
-          }
-          board[row + 1][column - 1].isEatable = false;
-          if(board[row + 1][column - 1].pawnChees) {
-            board[row + 1][column - 1].isEatable = board[row + 1][column - 1].pawnChees?.color !== this.color; 
-          }
+          board[_row][column + 1].isEatable = this.isOppositeColor(board[_row][column + 1], this.color);
+          board[_row][column - 1].isEatable = this.isOppositeColor(board[_row][column - 1], this.color);
         }
       }
-      if(Cheesboard.isFirstMoveBlack && row + 2 <= 7) {
-        board[row + 2][column].isMoveable = board[row + 2][column].pawnChees === null;
+      if((Cheesboard.isFirstMoveBlack &&  _doubleRow <= 7) || Cheesboard.isFirstMoveWhite && row - 2 >= 0) {
+        board[_doubleRow][column].isMoveable = board[_doubleRow][column].pawnChees === null;
       }
-    } else {
-      if(row - 1 >= 0) {
-        board[row - 1][column].isMoveable = board[row - 1][column].pawnChees === null;
-        if(column + 1 <= 7 && column - 1 >= 0) {
-          board[row - 1][column + 1].isEatable = false;
-          if(board[row - 1][column + 1].pawnChees) {
-            board[row - 1][column + 1].isEatable = board[row - 1][column + 1].pawnChees?.color !== this.color; 
-          }
-          board[row - 1][column - 1].isEatable = false;
-          if(board[row - 1][column - 1].pawnChees) {
-            board[row - 1][column - 1].isEatable = board[row - 1][column - 1].pawnChees?.color !== this.color; 
-          }
-        }
-      }
-      if(Cheesboard.isFirstMoveWhite && row - 2 >= 0) {
-        board[row - 2][column].isMoveable = board[row - 2][column].pawnChees === null;
+    }
+  }
+
+  setCheesBoxesCanEat(board: CheesBox[][], row: number, column: number): void {
+    const _row = this.color === IPawnTeam.black ? row + 1 : row - 1;
+    if(_row <= 7 && _row >= 0) {
+      if(column + 1 <= 7 && column - 1 >= 0) {
+        board[_row][column + 1].canBeEatable = this.isOppositeColor(board[_row][column + 1], this.color);
+        board[_row][column - 1].canBeEatable = this.isOppositeColor(board[_row][column - 1], this.color);
       }
     }
   }

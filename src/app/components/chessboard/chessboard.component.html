@@ -6,7 +6,8 @@
     <div class="row" *ngFor="let row of cheesboard.board; index as horIndex">
       <chees-box *ngFor="let cheesBox of row; index as vertIndex"
                  [cheesBox]="cheesBox"
-                 (showAvaibleMovement)="showAvaibleMovement($event, horIndex, vertIndex)">
+                 (showAvaibleMovement)="showAvaibleMovement($event, horIndex, vertIndex)"
+                 (setCheesBoxesCanEat)="setCheesBoxesCanEat($event, horIndex, vertIndex)">
       </chees-box>
     </div>
   </div>
