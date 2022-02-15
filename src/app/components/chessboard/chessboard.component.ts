@@ -60,9 +60,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   }
 
   showAvaibleMovement(pawnChees: IPawnChees): void {
-    if(pawnChees.type === IPawnCheesType.king) {
-      this.connector.isKingCaptured$.next(this.cheesboard.board);
-    }
     if(pawnChees && this.currentTeam === pawnChees.color) {
       pawnChees.setCheesBoxesStatus(this.cheesboard?.board, pawnChees.row, pawnChees.column);
     }
