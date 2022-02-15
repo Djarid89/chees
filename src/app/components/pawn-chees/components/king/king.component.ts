@@ -42,7 +42,10 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          this.connector.isKingUnderCheck$.next(boardColor);
+          const isTheSame = boardColor.board[this.row][this.column].pawnChees?.type === this.type;
+          if(!isTheSame) {
+            this.connector.isKingUnderCheck$.next(boardColor);
+          }
         }
       }
     })
@@ -57,7 +60,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.board[this.row][this.column].canBeEatable && boardColor?.color !== this.color) {
           const kingColor = this.color === IPawnTeam.black ? 'white' : 'black';
-          alert(`King under ${kingColor} check`);
+          console.log(`King ${kingColor} under check`);
         }
       }
     })

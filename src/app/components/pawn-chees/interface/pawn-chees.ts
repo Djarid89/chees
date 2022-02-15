@@ -21,6 +21,6 @@ export enum IPawnCheesType {
 }
 
 export enum IPawnTeam {
-  white = 0,
+  white = 1,
   black
 }

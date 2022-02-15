@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
-import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
+import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
 @Component({
@@ -34,7 +34,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
     setTimeout(() => {
-      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.currentTeam });
+      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });
     });
 
 
