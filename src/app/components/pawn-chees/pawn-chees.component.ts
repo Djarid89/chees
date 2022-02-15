@@ -1,17 +1,17 @@
-import { AfterViewInit, Component, ContentChild, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { CheesBox } from '../chees-box/class/chees-box';
 import { Cheesboard } from '../chessboard/class/cheesBoard';
 import { PAWN_CHEES } from './components/pawn-chees.token';
-import { IPawnChees, IPawnCheesType, IPawnTeam } from './interface/pawn-chees';
+import { IPawnChees, IPawnCheesType } from './interface/pawn-chees';
 
 @Component({
   selector: 'pawn-chees',
   templateUrl: './pawn-chees.component.html',
   styleUrls: ['./pawn-chees.component.scss']
 })
-export class PawnCheesComponent implements AfterViewInit, OnDestroy {
+export class PawnCheesComponent {
   @Input() cheesBox!: CheesBox;
   @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
   @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
@@ -19,31 +19,8 @@ export class PawnCheesComponent implements AfterViewInit, OnDestroy {
   @HostListener('mouseup') mouseup() { this.release() }
   @HostListener('dragend') dropEvent() { this.release() }
   moveCheesSubscription!: Subscription;
-  kingUnderCheckSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
-
-  ngOnDestroy(): void {
-    if(this.kingUnderCheckSubs) {
-      this.kingUnderCheckSubs.unsubscribe();
-    }
-    if(this.moveCheesSubscription) {
-      this.moveCheesSubscription.unsubscribe();
-    }
-  }
-
-  ngAfterViewInit(): void {
-    if(this.pawnBase?.type === IPawnCheesType.king) {
-      this.kingUnderCheckSubs = this.connector.isKingUnderCheck$.subscribe({
-        next: (pawnTeam: IPawnTeam) => {
-          if(this.cheesBox.canBeEatable && this.pawnBase?.color !== pawnTeam) {
-            const kingColor = pawnTeam === IPawnTeam.black ? 'white' : 'black';
-            alert(`King under ${kingColor} check`);
-          }
-        }
-      })
-    }
-  }
 
   mouseDown(): void {
     if(this.pawnBase) {

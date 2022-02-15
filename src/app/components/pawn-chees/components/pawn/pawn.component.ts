@@ -39,7 +39,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          this.connector.isKingUnderCheck$.next(this.color);
+          this.connector.isKingUnderCheck$.next(boardColor);
         }
       }
     })

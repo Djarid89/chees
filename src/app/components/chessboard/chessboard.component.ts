@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
@@ -9,7 +9,7 @@ import { Cheesboard } from './class/cheesBoard';
   templateUrl: './chessboard.component.html',
   styleUrls: ['./chessboard.component.scss']
 })
-export class ChessboardComponent implements OnInit, AfterContentInit, OnDestroy {
+export class ChessboardComponent implements OnInit, OnDestroy {
   cheesboard!: Cheesboard;
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
@@ -22,9 +22,6 @@ export class ChessboardComponent implements OnInit, AfterContentInit, OnDestroy 
 
   constructor(private readonly connector: ConnectorService) { }
 
-  ngAfterContentInit(): void {
-    this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.currentTeam });
-  }
 
   ngOnDestroy(): void {
     this.removeAllMovableSubs.unsubscribe();
@@ -36,6 +33,9 @@ export class ChessboardComponent implements OnInit, AfterContentInit, OnDestroy 
     this.cheesboard = new Cheesboard();
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
+    setTimeout(() => {
+      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.currentTeam });
+    });
 
 
     this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({

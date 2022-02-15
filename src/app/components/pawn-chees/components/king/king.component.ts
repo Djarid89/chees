@@ -25,6 +25,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() color!: IPawnTeam;
   updateAllCanEatSubs!: Subscription;
   isKingCapturedSubs!: Subscription;
+  kingUnderCheckSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) {
     super();
@@ -33,6 +34,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   ngOnDestroy(): void {
     this.updateAllCanEatSubs.unsubscribe();
     this.isKingCapturedSubs.unsubscribe();
+    this.kingUnderCheckSubs.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -40,7 +42,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          this.connector.isKingUnderCheck$.next(this.color);
+          this.connector.isKingUnderCheck$.next(boardColor);
         }
       }
     })
@@ -51,6 +53,14 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
         }
       }
     });
+    this.kingUnderCheckSubs = this.connector.isKingUnderCheck$.subscribe({
+      next: (boardColor: IBoardColor) => {
+        if(boardColor.board[this.row][this.column].canBeEatable && boardColor?.color !== this.color) {
+          const kingColor = this.color === IPawnTeam.black ? 'white' : 'black';
+          alert(`King under ${kingColor} check`);
+        }
+      }
+    })
   }
 
   private isCaptured(board: CheesBox[][]): boolean {
