@@ -18,29 +18,17 @@ export class Cheesboard {
   }
 
   initWhiteTeam(): void {
-    this.setPawn(6, IPawnTeam.white);
-    this.setServant(7, IPawnTeam.white);
+    // this.setPawn(6, IPawnTeam.white);
+    // this.setServant(7, IPawnTeam.white);
     this.board[7][4] = new CheesBox(7, 4, new PawnChees(IPawnCheesType.queen, IPawnTeam.white));
     this.board[7][3] = new CheesBox(7, 3, new PawnChees(IPawnCheesType.king, IPawnTeam.white));
   }
 
   initBlackTeam(): void {
-    this.setPawn(1, IPawnTeam.black);
-    this.setServant(0, IPawnTeam.black);
+    // this.setPawn(1, IPawnTeam.black);
+    // this.setServant(0, IPawnTeam.black);
     this.board[0][4] = new CheesBox(0, 4, new PawnChees(IPawnCheesType.king, IPawnTeam.black));
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
-  }
-
-  isKingUnderCheck(color: IPawnTeam): boolean {
-    let king: CheesBox = new CheesBox(0,0);
-    this.board.forEach((row: CheesBox[]) => {
-      row.forEach((cheesBox: CheesBox) => {
-        if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) {
-          king = cheesBox;
-        }
-      })
-    })
-    return king.isEatable;
   }
 
   resetCheesBoxCanEat(): void {

@@ -40,15 +40,20 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
+          this.connector.isKingUnderCheck$.next(this.color);
         }
       }
     })
     this.isKingCapturedSubs = this.connector.isKingCaptured$.subscribe({
-      next: (board: CheesBox[][]) => this.isCaptured(board)
+      next: (board: CheesBox[][]) => {
+        if(this.isCaptured(board)) {
+          this.connector.isGameWinning$.next(this.color);
+        }
+      }
     });
   }
 
-  private isCaptured(board: CheesBox[][]): void {
+  private isCaptured(board: CheesBox[][]): boolean {
     let isBlocked = true;
     if(this.row + 1 <= 7 && this.column + 1 <= 7) {
       isBlocked = isBlocked && board[this.row + 1][this.column + 1].canBeEatable;
@@ -74,10 +79,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
     if(this.row + 1 <= 7) {
       isBlocked = isBlocked && board[this.row + 1][this.column].canBeEatable;
     }
-
-    if(isBlocked) {
-      this.connector.isGameWinning$.next(board[this.row][this.column].pawnChees?.color);
-    }
+    return isBlocked;
   }
 
   setCheesBoxesStatus(board: CheesBox[][], row: number, column: number, canBeEatable = false) {

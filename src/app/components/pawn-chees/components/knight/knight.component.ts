@@ -38,6 +38,7 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
+          this.connector.isKingUnderCheck$.next(this.color);
         }
       }
     })
