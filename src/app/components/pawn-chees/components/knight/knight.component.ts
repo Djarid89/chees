@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { IBoardColor } from 'src/app/shared/interface/shared';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
+import { IBoardColor } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -17,18 +18,23 @@ import { PAWN_CHEES } from '../pawn-chees.token';
     }
   ]
 })
-export class KnightComponent extends BasePawnChees implements IPawnChees {
+export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy, IPawnChees {
   @Input() row!: number;
   @Input() column!: number;
   @Input() type!: IPawnCheesType;
   @Input() color!: IPawnTeam;
+  updateAllCanEatSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) {
     super();
   }
 
+  ngOnDestroy(): void {
+    this.updateAllCanEatSubs.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this.connector.updateAllCanEat$.subscribe({
+    this.updateAllCanEatSubs = this.connector.updateAllCanEat$.subscribe({
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
