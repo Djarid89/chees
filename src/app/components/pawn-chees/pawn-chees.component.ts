@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ContentChild, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { CheesBox } from '../chees-box/class/chees-box';
