@@ -3,6 +3,7 @@ import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees
 
 export class Cheesboard {
   board!: CheesBox[][];
+  clonedBoard!: CheesBox[][];
   graveyard: PawnChees[] = [];
 
   constructor() {
@@ -35,6 +36,40 @@ export class Cheesboard {
         this.board[i][j].canBeEatable = false;
       }
     }
+  }
+
+  kingCantMove(color: IPawnTeam): boolean {
+    const king = this.getKing(color);
+    let isBlocked = true;
+    if(king.row + 1 <= 7 && king.column + 1 <= 7) {
+      isBlocked = isBlocked && this.board[king.row + 1][king.column + 1].canBeEatable;
+    }
+    if(king.column + 1 <= 7) {
+      isBlocked = isBlocked && this.board[king.row][king.column + 1].canBeEatable;
+    }
+    if(king.row - 1 >= 0 && king.column + 1 <= 7) {
+      isBlocked = isBlocked && this.board[king.row - 1][king.column + 1].canBeEatable;
+    }
+    if(king.row - 1 >= 0) {
+      isBlocked = isBlocked && this.board[king.row - 1][king.column].canBeEatable;
+    }
+    if(king.row - 1 >= 0 && king.column - 1 >= 0) {
+      isBlocked = isBlocked && this.board[king.row - 1][king.column - 1].canBeEatable;
+    }
+    if(king.column - 1 >= 0) {
+      isBlocked = isBlocked && this.board[king.row][king.column - 1].canBeEatable;
+    }
+    if(king.row + 1 <= 7 &&  king.column - 1 >= 0) {
+      isBlocked = isBlocked && this.board[king.row + 1][king.column - 1].canBeEatable;
+    }
+    if(king.row + 1 <= 7) {
+      isBlocked = isBlocked && this.board[king.row + 1][king.column].canBeEatable;
+    }
+    return isBlocked;
+  }
+
+  getOppositeTeam(currentTeam: IPawnTeam): IPawnTeam {
+    return currentTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black
   }
 
   movePawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
@@ -75,11 +110,42 @@ export class Cheesboard {
     return king;
   }
 
-  removeStatus(): void {
+  getIsMoveableOrIsEatable(): CheesBox[] {
+    let result: CheesBox[] = [];
+    this.board.forEach((row: CheesBox[]) => {
+      result = result.concat(row.filter((cheesBox: CheesBox) => cheesBox.isMoveable || cheesBox.isEatable));
+    });
+    return result;
+  }
+
+  getNumberPawnChees(color: IPawnTeam): number {
+    let result = 0;
     for(let i = 0; i < 8; i++) {
       for(let j = 0; j < 8; j++) {
-        this.board[i][j].isMoveable = false;
-        this.board[i][j].isEatable = false;
+        if(this.board[i][j].pawnChees && this.board[i][j].pawnChees?.color === color) {
+          result++
+        }
+      }
+    }
+    return result;
+  }
+
+  cloneCheesBoard(): void {
+    for(let i = 0; i < 8; i++) {
+      this.clonedBoard[i] = [];
+      for(let j = 0; j < 8; j++) {
+        const pawnChees = this.board[i][j].pawnChees;
+        this.clonedBoard[i][j] = new CheesBox(i, j, new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.doubleMove));
+      }
+    }
+  }
+
+  removePawnCheesIsEatable(): void {
+    for(let i = 0; i < 8; i++) {
+      for(let j = 0; j < 8; j++) {
+        if(this.board[i][j].isEatable) {
+          this.board[i][j].pawnChees = null;
+        }
       }
     }
   }

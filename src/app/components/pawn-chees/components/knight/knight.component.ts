@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
-import { IBoardColor } from '../../../../shared/interface/shared';
+import { IBoardColor, ICheesBoardColor } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -24,6 +24,7 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
   updateAllCanEatSubs!: Subscription;
+  tryDefendKing! : Subscription;
 
   constructor(private readonly connector: ConnectorService) {
     super();
@@ -38,10 +39,16 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          this.connector.isKingUnderCheck$.next(boardColor);
         }
       }
-    })
+    });
+    this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
+      next: (cheesBoardColor: ICheesBoardColor) => {
+        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanEat$)) {
+          this.connector.kingIsBlock$.next();
+        }
+      }
+    });
   }
 
   setCheesBoxesStatus(board: CheesBox[][], row: number, column: number, canBeEatable = false) {

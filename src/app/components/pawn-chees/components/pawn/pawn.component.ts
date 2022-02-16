@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
-import { IBoardColor } from '../../../../shared/interface/shared';
+import { IBoardColor, ICheesBoardColor } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { Cheesboard } from '../../../chessboard/class/cheesBoard';
 import { BasePawnChees } from '../../class/base-pawn-chees';
@@ -26,6 +26,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() color: IPawnTeam  | undefined;
   @Input() doubleMove: boolean  | undefined;
   updateAllCanEatSubs!: Subscription;
+  tryDefendKing! : Subscription;
 
   constructor(private readonly connector: ConnectorService) {
     super();
@@ -40,10 +41,16 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          this.connector.isKingUnderCheck$.next(boardColor);
         }
       }
-    })
+    });
+    this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
+      next: (cheesBoardColor: ICheesBoardColor) => {
+        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanEat$)) {
+          this.connector.kingIsBlock$.next();
+        }
+      }
+    });
   }
 
   setCheesBoxesStatus(board: CheesBox[][], row: number, column: number): void {
@@ -58,7 +65,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
         board[_row][column - 1].isEatable = this.isOppositeColor(board[_row][column - 1], this.color);
       }
     }
-    if(this.doubleMove && (_doubleRow <= 7 && _doubleRow >= 0)) {  // FIX ME
+    if(this.doubleMove && (_doubleRow <= 7 && _doubleRow >= 0)) {
       board[_doubleRow][column].isMoveable = board[_doubleRow][column].pawnChees === null;
     }
 }

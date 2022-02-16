@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { Action, IFromToCheesBox } from '../../shared/interface/shared';
-import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
-import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
+import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
 @Component({
@@ -18,17 +17,21 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   currentTeam = IPawnTeam.white;
   initSubscription!: Subscription;
   winningTeam: IPawnTeam | undefined;
-  removeAllMovableSubs!: Subscription;
-  isGameWinningSubs!: Subscription;
-  movePawnChees!: Subscription;
-  checkUndoMove!: Subscription;
+  isGameWinningSub!: Subscription;
+  movePawnCheesSub!: Subscription;
+  kingIsBlockSub!: Subscription;
+  gameIsOverSub!: Subscription;
+  forkJoinSub!: Subscription;
+  kingIsBlockCounter!: number;
 
   constructor(private readonly connector: ConnectorService) { }
 
   ngOnDestroy(): void {
-    this.removeAllMovableSubs.unsubscribe();
-    this.isGameWinningSubs.unsubscribe();
-    this.movePawnChees.unsubscribe();
+    this.isGameWinningSub.unsubscribe();
+    this.movePawnCheesSub.unsubscribe();
+    this.kingIsBlockSub.unsubscribe();
+    this.gameIsOverSub.unsubscribe();
+    this.forkJoinSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -36,19 +39,24 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
     setTimeout(() => {
-      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });
+      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
     });
-
-    this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({
-      next: () => this.cheesboard.removeStatus()
+    this.connector.kingIsBlock$.subscribe({
+      next: () => {
+        this.kingIsBlockCounter++;
+        if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(this.cheesboard.getOppositeTeam(this.currentTeam))) {
+          this.connector.gameIsOver$.next();
+        }
+      }
     });
-    this.isGameWinningSubs = this.connector.isGameWinning$.subscribe({
-      next: (pawnTeam: IPawnTeam) => this.winningTeam = this.getOppositeTeam(pawnTeam)
-    });
-    this.movePawnChees = this.connector.movePawnChees$.subscribe({
+    this.connector.gameIsOver$.subscribe({
+      next: (winningTeam: IPawnTeam) => this.winningTeam = winningTeam
+    })
+    this.movePawnCheesSub = this.connector.movePawnChees$.subscribe({
       next: (fromToCheesBox: IFromToCheesBox) => {
         const from = fromToCheesBox.fromCheesBox;
         const to = fromToCheesBox.toCheesBox;
+        const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
 
         if(fromToCheesBox.action === Action.move) {
           this.cheesboard.movePawnChees(from, to);
@@ -56,8 +64,8 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           this.cheesboard.eatPawnChees(from, to);
         }
         this.cheesboard.resetCheesBoxCanEat();
-        const updateAllCanEat$ = of(this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) }));
-        forkJoin({ updateAllCanEat$ }).subscribe({
+        const updateAllCanEat$ = of(this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: oppositeTeam }));
+        this.forkJoinSub = forkJoin({ updateAllCanEat$ }).subscribe({
           next: () => {
             if(this.cheesboard.getKing(this.currentTeam).canBeEatable) {
               alert('Your move discovered the king');
@@ -67,18 +75,22 @@ export class ChessboardComponent implements OnInit, OnDestroy {
                 this.cheesboard.swapPawnChees(from, to, true);
               }
               this.cheesboard.resetCheesBoxCanEat();
-              this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });
-            } else {
-              this.currentTeam = this.getOppositeTeam(this.currentTeam);
+              this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: oppositeTeam });
+            } else if(this.cheesboard.getKing(oppositeTeam).canBeEatable) {
+              if(this.cheesboard.kingCantMove(oppositeTeam)) {
+                alert(`${oppositeTeam} king under check`);
+                this.kingIsBlockCounter = 0;
+              this.cheesboard.resetCheesBoxCanEat();
+              this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+              }
+            }
+            else {
+              this.currentTeam = oppositeTeam;
             }
           }
         });
       }
     });
-  }
-
-  private getOppositeTeam(currentTeam: IPawnTeam): IPawnTeam {
-    return currentTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black
   }
 
   showAvaibleMovement(pawnChees: IPawnChees): void {

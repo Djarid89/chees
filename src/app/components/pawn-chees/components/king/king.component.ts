@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
-import { IBoardColor } from '../../../../shared/interface/shared';
+import { IBoardColor, ICheesBoardColor } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -24,8 +24,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
   updateAllCanEatSubs!: Subscription;
-  isKingCapturedSubs!: Subscription;
-  kingUnderCheckSubs!: Subscription;
+  tryDefendKing! : Subscription;
 
   constructor(private readonly connector: ConnectorService) {
     super();
@@ -33,8 +32,6 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
 
   ngOnDestroy(): void {
     this.updateAllCanEatSubs.unsubscribe();
-    this.isKingCapturedSubs.unsubscribe();
-    this.kingUnderCheckSubs.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -42,57 +39,16 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
-          const isTheSame = boardColor.board[this.row][this.column].pawnChees?.type === this.type;
-          if(!isTheSame) {
-            this.connector.isKingUnderCheck$.next(boardColor);
-          }
-        }
-      }
-    })
-    this.isKingCapturedSubs = this.connector.isKingCaptured$.subscribe({
-      next: (board: CheesBox[][]) => {
-        if(this.isCaptured(board)) {
-          this.connector.isGameWinning$.next(this.color);
         }
       }
     });
-    this.kingUnderCheckSubs = this.connector.isKingUnderCheck$.subscribe({
-      next: (boardColor: IBoardColor) => {
-        if(boardColor.board[this.row][this.column].canBeEatable && boardColor?.color !== this.color) {
-          const kingColor = this.color === IPawnTeam.black ? 'white' : 'black';
-          console.log(`King ${kingColor} under check`);
+    this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
+      next: (cheesBoardColor: ICheesBoardColor) => {
+        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanEat$)) {
+          this.connector.kingIsBlock$.next();
         }
       }
-    })
-  }
-
-  private isCaptured(board: CheesBox[][]): boolean {
-    let isBlocked = true;
-    if(this.row + 1 <= 7 && this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row + 1][this.column + 1].canBeEatable;
-    }
-    if(this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row][this.column + 1].canBeEatable;
-    }
-    if(this.row - 1 >= 0 && this.column + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row - 1][this.column + 1].canBeEatable;
-    }
-    if(this.row - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row - 1][this.column].canBeEatable;
-    }
-    if(this.row - 1 >= 0 && this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row - 1][this.column - 1].canBeEatable;
-    }
-    if(this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row][this.column - 1].canBeEatable;
-    }
-    if(this.row + 1 <= 7 &&  this.column - 1 >= 0) {
-      isBlocked = isBlocked && board[this.row + 1][this.column - 1].canBeEatable;
-    }
-    if(this.row + 1 <= 7) {
-      isBlocked = isBlocked && board[this.row + 1][this.column].canBeEatable;
-    }
-    return isBlocked;
+    });
   }
 
   setCheesBoxesStatus(board: CheesBox[][], row: number, column: number, canBeEatable = false) {
