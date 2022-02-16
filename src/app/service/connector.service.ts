@@ -10,7 +10,7 @@ import { IBoardColor, ICheesBoardColor, IFromToCheesBox } from '../shared/interf
 export class ConnectorService {
   moveUp$ = new Subject<CheesBox>();
   removeAllMovable$ = new Subject<void>();
-  updateAllCanEat$ = new Subject<IBoardColor>();
+  updateAllCanBeEatable$ = new Subject<IBoardColor>();
   movePawnChees$ = new Subject<IFromToCheesBox>();
   tryDefendKing$ = new Subject<ICheesBoardColor>();
   kingIsBlock$ = new Subject<void>();

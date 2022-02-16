@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
-import { Cheesboard } from '../../../chessboard/class/cheesBoard';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
@@ -25,7 +24,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() type!: IPawnCheesType | undefined;
   @Input() color: IPawnTeam  | undefined;
   @Input() doubleMove: boolean  | undefined;
-  updateAllCanEatSubs!: Subscription;
+  updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 
   constructor(private readonly connector: ConnectorService) {
@@ -33,11 +32,11 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   }
 
   ngOnDestroy(): void {
-    this.updateAllCanEatSubs.unsubscribe();
+    this.updateAllCanEatableSubs.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.updateAllCanEatSubs = this.connector.updateAllCanEat$.subscribe({
+    this.updateAllCanEatableSubs = this.connector.updateAllCanBeEatable$.subscribe({
       next: (boardColor: IBoardColor) => {
         if(boardColor.color === this.color) {
           this.setCheesBoxesCanEat(boardColor.board);
@@ -46,7 +45,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
-        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanEat$)) {
+        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
           this.connector.kingIsBlock$.next();
         }
       }

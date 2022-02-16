@@ -43,13 +43,15 @@ export class BasePawnChees {
       } else {
         cheesboard.eatPawnChees(fromCheesBox, toCheesBox);
       }
-      const updateAllCanEat = of(updateAllCanEat$.next({ board: cheesboard.clonedBoard, color: cheesboard.getOppositeTeam(pawnChees.color || IPawnTeam.white) }));
-      this.forkJoinSub = forkJoin({ updateAllCanEat }).subscribe({
-        next: () => {
-          kingIsBlock = kingIsBlock && cheesboard.getKing(cheesBoardColor.color).canBeEatable;
-        }
+      setTimeout(() => {
+        const updateAllCanEatable = of(updateAllCanEat$.next({ board: cheesboard.clonedBoard, color: cheesboard.getOppositeTeam(pawnChees.color || IPawnTeam.white) }));
+        this.forkJoinSub = forkJoin({ updateAllCanEat: updateAllCanEatable }).subscribe({
+          next: () => {
+            kingIsBlock = kingIsBlock && cheesboard.getKing(cheesBoardColor.color).canBeEatable;
+          }
+        });
+        this.forkJoinSub.unsubscribe();
       });
-      this.forkJoinSub.unsubscribe();
     }
     return kingIsBlock;
   }

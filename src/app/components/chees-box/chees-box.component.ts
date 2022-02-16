@@ -17,8 +17,4 @@ export class CheesBoxComponent {
   propagateShowAvaibleMovement(pawnChees: IPawnChees) {
     this.showAvaibleMovement.emit(pawnChees);
   }
-
-  propagateSetCheesBoxesCanEat(pawnChees: IPawnChees) {
-    this.setCheesBoxesCanEat.emit(pawnChees);
-  }
 }

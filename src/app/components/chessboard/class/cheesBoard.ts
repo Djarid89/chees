@@ -30,7 +30,16 @@ export class Cheesboard {
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
   }
 
-  resetCheesBoxCanEat(): void {
+  removeIsMovableAndIsEatable(): void {
+    for(let i = 0; i < 8; i++) {
+      for(let j = 0; j < 8; j++) {
+        this.board[i][j].isMoveable = false;
+        this.board[i][j].isEatable = false;
+      }
+    }
+  }
+
+  resetCheesBoxCanBeEatable(): void {
     for(let i = 0; i < 8; i++) {
       for(let j = 0; j < 8; j++) {
         this.board[i][j].canBeEatable = false;
@@ -105,7 +114,11 @@ export class Cheesboard {
   getKing(color: IPawnTeam): CheesBox {
     let king = new CheesBox();
     for(const row of this.board) {
-      king = row.find((cheesBox: CheesBox) => cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) || new CheesBox();
+      for(const cheesBox of row) {
+        if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) {
+          king = cheesBox;
+        }
+      }
     }
     return king;
   }
@@ -131,6 +144,7 @@ export class Cheesboard {
   }
 
   cloneCheesBoard(): void {
+    this.clonedBoard = [];
     for(let i = 0; i < 8; i++) {
       this.clonedBoard[i] = [];
       for(let j = 0; j < 8; j++) {
