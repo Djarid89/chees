@@ -23,6 +23,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   kingIsBlockSub!: Subscription;
   gameIsOverSub!: Subscription;
   forkJoinSub!: Subscription;
+  forkJoinSub2!: Subscription;
   kingIsBlockCounter!: number;
 
   constructor(private readonly connector: ConnectorService) { }
@@ -70,13 +71,10 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         }
         setTimeout(() => {
           this.cheesboard.resetCheesBoxCanBeEatable();
-          const updateAllCanEatable$ = of(this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: oppositeTeam }));
+          let updateAllCanEatable$ = of(this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: oppositeTeam }));
           this.forkJoinSub = forkJoin({ updateAllCanEat$: updateAllCanEatable$ }).subscribe({
             next: () => {
               const myKing = this.cheesboard.getKing(this.currentTeam);
-              const oppositeKing = this.cheesboard.getKing(oppositeTeam);
-
-              this.cheesboard.resetCheesBoxCanBeEatable();
               if(myKing.canBeEatable) {
                 alert('Your move discovered the king');
                 if(fromToCheesBox.action === Action.move) {
@@ -85,18 +83,29 @@ export class ChessboardComponent implements OnInit, OnDestroy {
                   this.cheesboard.swapPawnChees(from, to, true);
                 }
                 setTimeout(() => {
+                  this.cheesboard.resetCheesBoxCanBeEatable();
                   this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
                 });
-              } else if(oppositeKing.canBeEatable) {
-                if(this.cheesboard.kingCantMove(oppositeTeam)) {
-                  const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
-                  alert(`${col} king under check`);
-                  this.kingIsBlockCounter = 0;
-                  this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
-                }
               } else {
-                this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
-                this.currentTeam = oppositeTeam;
+                this.cheesboard.resetCheesBoxCanBeEatable();
+                updateAllCanEatable$ = of(this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam }));
+                this.forkJoinSub = forkJoin({ updateAllCanEat$: updateAllCanEatable$ }).subscribe({
+                  next: () => {
+                    const oppositeKing = this.cheesboard.getKing(oppositeTeam);
+                    if(oppositeKing.canBeEatable) {
+                      if(this.cheesboard.kingCantMove(oppositeTeam)) {
+                        const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
+                        alert(`${col} king under check`);
+                        this.kingIsBlockCounter = 0;
+                        this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+                      }
+                    } else {
+                      this.cheesboard.resetCheesBoxCanBeEatable();
+                      this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
+                      this.currentTeam = oppositeTeam;
+                    }
+                  }
+                });
               }
             }
           });
