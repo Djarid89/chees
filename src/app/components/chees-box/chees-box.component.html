@@ -2,7 +2,7 @@
   <pawn-chees [cheesBox]="cheesBox" (showAvaibleMovement)="propagateShowAvaibleMovement($event)">
     <ng-container *ngIf="cheesBox.pawnChees">
       <ng-container [ngSwitch]="cheesBox.pawnChees.type">
-        <pawn [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" [row]="cheesBox.row" [column]="cheesBox.column" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
+        <pawn [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" [doubleMove]="cheesBox.pawnChees.doubleMove" [row]="cheesBox.row" [column]="cheesBox.column" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
         <bishop [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" [row]="cheesBox.row" [column]="cheesBox.column" *ngSwitchCase="IPawnCheesType.bishop"></bishop>
         <king [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" [row]="cheesBox.row" [column]="cheesBox.column" *ngSwitchCase="IPawnCheesType.king"></king>
         <knight [color]="cheesBox.pawnChees.color" [type]="cheesBox.pawnChees.type" [row]="cheesBox.row" [column]="cheesBox.column" *ngSwitchCase="IPawnCheesType.knight"></knight>

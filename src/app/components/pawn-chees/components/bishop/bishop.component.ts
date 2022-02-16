@@ -21,8 +21,8 @@ import { PAWN_CHEES } from '../pawn-chees.token';
 export class BishopComponent extends BasePawnChees implements OnInit, OnDestroy, IPawnChees {
   @Input() row!: number;
   @Input() column!: number;
-  @Input() type!: IPawnCheesType;
-  @Input() color!: IPawnTeam;
+  @Input() type!: IPawnCheesType | undefined
+  @Input() color!: IPawnTeam | undefined;
   updateAllCanEatSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) {

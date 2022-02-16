@@ -22,8 +22,9 @@ import { PAWN_CHEES } from '../pawn-chees.token';
 export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, IPawnChees {
   @Input() row!: number;
   @Input() column!: number;
-  @Input() type!: IPawnCheesType;
-  @Input() color!: IPawnTeam;
+  @Input() type!: IPawnCheesType | undefined;
+  @Input() color: IPawnTeam  | undefined;
+  @Input() doubleMove: boolean  | undefined;
   updateAllCanEatSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) {
@@ -57,7 +58,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
         board[_row][column - 1].isEatable = this.isOppositeColor(board[_row][column - 1], this.color);
       }
     }
-    if((Cheesboard.isFirstMoveBlack &&  _doubleRow <= 7) || Cheesboard.isFirstMoveWhite && row - 2 >= 0) {
+    if(this.doubleMove && (_doubleRow <= 7 && _doubleRow >= 0)) {  // FIX ME
       board[_doubleRow][column].isMoveable = board[_doubleRow][column].pawnChees === null;
     }
 }

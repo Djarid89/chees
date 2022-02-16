@@ -21,8 +21,8 @@ import { PAWN_CHEES } from '../pawn-chees.token';
 export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, IPawnChees {
   @Input() row!: number;
   @Input() column!: number;
-  @Input() type!: IPawnCheesType;
-  @Input() color!: IPawnTeam;
+  @Input() type!: IPawnCheesType | undefined
+  @Input() color!: IPawnTeam | undefined;
   updateAllCanEatSubs!: Subscription;
   isKingCapturedSubs!: Subscription;
   kingUnderCheckSubs!: Subscription;

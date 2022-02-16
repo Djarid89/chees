@@ -1,8 +1,8 @@
-import { Component, ContentChild, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
+import { Action } from '../../shared/interface/shared';
 import { CheesBox } from '../chees-box/class/chees-box';
-import { Cheesboard } from '../chessboard/class/cheesBoard';
 import { PAWN_CHEES } from './components/pawn-chees.token';
 import { IPawnChees, IPawnCheesType } from './interface/pawn-chees';
 
@@ -18,7 +18,7 @@ export class PawnCheesComponent {
   @HostListener('mousedown') mouseDownEvent() { this.mouseDown() }
   @HostListener('mouseup') mouseup() { this.release() }
   @HostListener('dragend') dropEvent() { this.release() }
-  moveCheesSubscription!: Subscription;
+  moveUpSubs!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
 
@@ -26,29 +26,24 @@ export class PawnCheesComponent {
     if(this.pawnBase) {
       this.showAvaibleMovement.emit(this.pawnBase);
 
-      this.moveCheesSubscription = this.connector.movePawnChees$.subscribe({
+      this.moveUpSubs = this.connector.moveUp$.subscribe({
         next: (toCheesBox: CheesBox) => {
-          if(this.cheesBox === toCheesBox || !toCheesBox) {
-            this.moveCheesSubscription.unsubscribe();
-            return;
+          const fromCheesBox = this.cheesBox;
+          if(fromCheesBox !== toCheesBox) {
+            if(toCheesBox?.isMoveable) {
+              this.connector.movePawnChees$.next({ fromCheesBox: fromCheesBox, toCheesBox: toCheesBox, action: Action.move });
+            } else if(toCheesBox?.isEatable && toCheesBox?.pawnChees?.type !== IPawnCheesType.king) {
+              this.connector.movePawnChees$.next({ fromCheesBox: fromCheesBox, toCheesBox: toCheesBox, action: Action.eat });
+            }
           }
-
-          if(toCheesBox.isMoveable) {
-            Cheesboard.movePawnChees(this.cheesBox, toCheesBox);
-            this.connector.changeTurn$.next();
-          } else if(toCheesBox.isEatable && toCheesBox.pawnChees?.type !== IPawnCheesType.king) {
-            Cheesboard.eatPawnChees(this.cheesBox, toCheesBox);
-            this.connector.changeTurn$.next();
-          }
-
-          this.moveCheesSubscription.unsubscribe();
+          this.moveUpSubs.unsubscribe();
         }
       });
     }
   }
 
   release(): void {
-    this.connector.movePawnChees$.next(this.cheesBox);
+    this.connector.moveUp$.next(this.cheesBox);
     this.connector.removeAllMovable$.next();
   }
 }

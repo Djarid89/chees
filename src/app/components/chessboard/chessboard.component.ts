@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
-import { Subscription } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
-import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
+import { Action, IFromToCheesBox } from '../../shared/interface/shared';
+import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
 @Component({
@@ -18,15 +20,15 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   winningTeam: IPawnTeam | undefined;
   removeAllMovableSubs!: Subscription;
   isGameWinningSubs!: Subscription;
-  changeTurnSubs!: Subscription;
+  movePawnChees!: Subscription;
+  checkUndoMove!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
-
 
   ngOnDestroy(): void {
     this.removeAllMovableSubs.unsubscribe();
     this.isGameWinningSubs.unsubscribe();
-    this.changeTurnSubs.unsubscribe();
+    this.movePawnChees.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -37,22 +39,46 @@ export class ChessboardComponent implements OnInit, OnDestroy {
       this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });
     });
 
-
     this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({
       next: () => this.cheesboard.removeStatus()
     });
     this.isGameWinningSubs = this.connector.isGameWinning$.subscribe({
       next: (pawnTeam: IPawnTeam) => this.winningTeam = this.getOppositeTeam(pawnTeam)
     });
-    this.changeTurnSubs = this.connector.changeTurn$.subscribe({
-      next: () => {
+    this.movePawnChees = this.connector.movePawnChees$.subscribe({
+      next: (fromToCheesBox: IFromToCheesBox) => {
+        const from = fromToCheesBox.fromCheesBox;
+        const to = fromToCheesBox.toCheesBox;
+
+        let eatenPawnChees = new PawnChees();
+        if(fromToCheesBox.action === Action.move) {
+          this.cheesboard.movePawnChees(from, to);
+        } else {
+          eatenPawnChees = new PawnChees(to.pawnChees?.type, to.pawnChees?.color, true);
+          this.cheesboard.eatPawnChees(from, to);
+        }
         this.cheesboard.resetCheesBoxCanEat();
-        setTimeout(() => {
-          this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.currentTeam });
-          this.currentTeam = this.getOppositeTeam(this.currentTeam);
+        const updateAllCanEat$ = of(this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) }));
+        forkJoin({ updateAllCanEat$ }).subscribe({
+          next: () => {
+            if(this.cheesboard.getKing(this.currentTeam).canBeEatable) {
+              console.log('La tua mossa ha scoperto il re fai retromarcia');
+              if(fromToCheesBox.action === Action.move) {
+                this.cheesboard.movePawnChees(to, from);
+              } else {
+                const tempPawnChees = new PawnChees(to.pawnChees?.type, to.pawnChees?.color, true);
+                to.pawnChees = eatenPawnChees;
+                from.pawnChees = tempPawnChees;
+              }
+              this.cheesboard.resetCheesBoxCanEat();
+              this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });
+            } else {
+              this.currentTeam = this.getOppositeTeam(this.currentTeam);
+            }
+          }
         });
       }
-    })
+    });
   }
 
   private getOppositeTeam(currentTeam: IPawnTeam): IPawnTeam {

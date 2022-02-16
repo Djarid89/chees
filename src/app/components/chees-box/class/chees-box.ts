@@ -8,9 +8,9 @@ export class CheesBox {
   isEatable: boolean;
   canBeEatable: boolean;
 
-  constructor(row: number, column: number, pawnChees?: PawnChees | null) {
-    this.row = row;
-    this.column = column;
+  constructor(row?: number, column?: number, pawnChees?: PawnChees | null) {
+    this.row = row || 0;
+    this.column = column || 0;
     this.pawnChees = pawnChees || null;
     this.isMoveable = false;
     this.isEatable = false;
@@ -23,11 +23,13 @@ export class CheesBox {
 }
 
 export class PawnChees {
-  type: IPawnCheesType;
-  color: IPawnTeam;
+  type: IPawnCheesType | undefined;
+  color: IPawnTeam | undefined;
+  doubleMove: boolean;
 
-  constructor(type: IPawnCheesType, color: IPawnTeam) {
-    this.type = type;
-    this.color = color;
+  constructor(type?: IPawnCheesType, color?: IPawnTeam, noMoreFirstTurn = false) {
+    this.type = type || undefined;
+    this.color = color || undefined;
+    this.doubleMove = noMoreFirstTurn ? false : type === IPawnCheesType.pawn;
   }
 }

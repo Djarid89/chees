@@ -3,9 +3,7 @@ import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees
 
 export class Cheesboard {
   board!: CheesBox[][];
-  static graveyard: PawnChees[] = [];
-  static isFirstMoveWhite = true;
-  static isFirstMoveBlack = true;
+  graveyard: PawnChees[] = [];
 
   constructor() {
     this.board = [];
@@ -39,28 +37,31 @@ export class Cheesboard {
     }
   }
 
-  static movePawnChees(formCheesBox: CheesBox, toCheesBox: CheesBox): void {
-    if(!formCheesBox.pawnChees) {
+  movePawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
+    if(!fromCheesBox.pawnChees) {
       return;
     }
-    toCheesBox.pawnChees = new PawnChees(formCheesBox.pawnChees.type, formCheesBox.pawnChees.color);
-    if(formCheesBox.pawnChees.color === IPawnTeam.white) {
-      this.isFirstMoveWhite = false;
-    } else {
-      this.isFirstMoveBlack = false;
-    }
-    formCheesBox.pawnChees = null;
+    toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees.type, fromCheesBox.pawnChees.color, true);
+    fromCheesBox.pawnChees = null;
   }
 
-  static eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox): void {
+  eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox): void {
     if(!eaterCheesBox.pawnChees) {
       return;
     }
     if(eatenCheesBox.pawnChees) {
-      this.graveyard.push(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color));
+      this.graveyard.push(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, true));
     }
-    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color);
+    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, true);
     eaterCheesBox.pawnChees = null;
+  }
+
+  getKing(color: IPawnTeam): CheesBox {
+    let king = new CheesBox();
+    for(const row of this.board) {
+      king = row.find((cheesBox: CheesBox) => cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) || new CheesBox();
+    }
+    return king;
   }
 
   removeStatus(): void {

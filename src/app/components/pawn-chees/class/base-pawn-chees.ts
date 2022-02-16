@@ -1,10 +1,10 @@
 import { CheesBox } from "../../chees-box/class/chees-box";
-import { IPawnCheesType, IPawnTeam } from "../interface/pawn-chees";
+import { IPawnTeam } from "../interface/pawn-chees";
 
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
 
-  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam, canBeEatable: boolean, isKing = false): void {
+  setCheesBoxStatus(cheesBox: CheesBox, color: IPawnTeam | undefined, canBeEatable: boolean, isKing = false): void {
     if(canBeEatable) {
       cheesBox.canBeEatable = true;
     } else {
@@ -18,7 +18,7 @@ export class BasePawnChees {
     }
   }
 
-  isOppositeColor(cheesBox: CheesBox, color: IPawnTeam): boolean {
+  isOppositeColor(cheesBox: CheesBox, color: IPawnTeam | undefined): boolean {
     if(!cheesBox.pawnChees) {
       return false;
     } else {
