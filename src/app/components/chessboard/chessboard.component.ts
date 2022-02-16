@@ -17,6 +17,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   currentTeam = IPawnTeam.white;
   initSubscription!: Subscription;
   winningTeam: IPawnTeam | undefined;
+  removeAllMovableSubs!: Subscription;
   isGameWinningSub!: Subscription;
   movePawnCheesSub!: Subscription;
   kingIsBlockSub!: Subscription;
@@ -27,6 +28,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   constructor(private readonly connector: ConnectorService) { }
 
   ngOnDestroy(): void {
+    this.removeAllMovableSubs.unsubscribe();
     this.isGameWinningSub.unsubscribe();
     this.movePawnCheesSub.unsubscribe();
     this.kingIsBlockSub.unsubscribe();
@@ -39,7 +41,10 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
     setTimeout(() => {
-      this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
+      this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
+    });
+    this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({
+      next: () => this.cheesboard.removeIsMovableAndIsEatable()
     });
     this.connector.kingIsBlock$.subscribe({
       next: () => {
@@ -63,31 +68,38 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         } else {
           this.cheesboard.eatPawnChees(from, to);
         }
-        this.cheesboard.resetCheesBoxCanEat();
-        const updateAllCanEat$ = of(this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: oppositeTeam }));
-        this.forkJoinSub = forkJoin({ updateAllCanEat$ }).subscribe({
-          next: () => {
-            if(this.cheesboard.getKing(this.currentTeam).canBeEatable) {
-              alert('Your move discovered the king');
-              if(fromToCheesBox.action === Action.move) {
-                this.cheesboard.movePawnChees(to, from);
+        setTimeout(() => {
+          this.cheesboard.resetCheesBoxCanBeEatable();
+          const updateAllCanEatable$ = of(this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: oppositeTeam }));
+          this.forkJoinSub = forkJoin({ updateAllCanEat$: updateAllCanEatable$ }).subscribe({
+            next: () => {
+              const myKing = this.cheesboard.getKing(this.currentTeam);
+              const oppositeKing = this.cheesboard.getKing(oppositeTeam);
+
+              this.cheesboard.resetCheesBoxCanBeEatable();
+              if(myKing.canBeEatable) {
+                alert('Your move discovered the king');
+                if(fromToCheesBox.action === Action.move) {
+                  this.cheesboard.movePawnChees(to, from);
+                } else {
+                  this.cheesboard.swapPawnChees(from, to, true);
+                }
+                setTimeout(() => {
+                  this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
+                });
+              } else if(oppositeKing.canBeEatable) {
+                if(this.cheesboard.kingCantMove(oppositeTeam)) {
+                  const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
+                  alert(`${col} king under check`);
+                  this.kingIsBlockCounter = 0;
+                  this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+                }
               } else {
-                this.cheesboard.swapPawnChees(from, to, true);
-              }
-              this.cheesboard.resetCheesBoxCanEat();
-              this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: oppositeTeam });
-            } else if(this.cheesboard.getKing(oppositeTeam).canBeEatable) {
-              if(this.cheesboard.kingCantMove(oppositeTeam)) {
-                alert(`${oppositeTeam} king under check`);
-                this.kingIsBlockCounter = 0;
-              this.cheesboard.resetCheesBoxCanEat();
-              this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+                this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
+                this.currentTeam = oppositeTeam;
               }
             }
-            else {
-              this.currentTeam = oppositeTeam;
-            }
-          }
+          });
         });
       }
     });
