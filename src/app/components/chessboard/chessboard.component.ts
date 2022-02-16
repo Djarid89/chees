@@ -50,11 +50,9 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         const from = fromToCheesBox.fromCheesBox;
         const to = fromToCheesBox.toCheesBox;
 
-        let eatenPawnChees = new PawnChees();
         if(fromToCheesBox.action === Action.move) {
           this.cheesboard.movePawnChees(from, to);
         } else {
-          eatenPawnChees = new PawnChees(to.pawnChees?.type, to.pawnChees?.color, true);
           this.cheesboard.eatPawnChees(from, to);
         }
         this.cheesboard.resetCheesBoxCanEat();
@@ -62,13 +60,11 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         forkJoin({ updateAllCanEat$ }).subscribe({
           next: () => {
             if(this.cheesboard.getKing(this.currentTeam).canBeEatable) {
-              console.log('La tua mossa ha scoperto il re fai retromarcia');
+              alert('Your move discovered the king');
               if(fromToCheesBox.action === Action.move) {
                 this.cheesboard.movePawnChees(to, from);
               } else {
-                const tempPawnChees = new PawnChees(to.pawnChees?.type, to.pawnChees?.color, true);
-                to.pawnChees = eatenPawnChees;
-                from.pawnChees = tempPawnChees;
+                this.cheesboard.swapPawnChees(from, to, true);
               }
               this.cheesboard.resetCheesBoxCanEat();
               this.connector.updateAllCanEat$.next({ board: this.cheesboard.board, color: this.getOppositeTeam(this.currentTeam) });

@@ -45,6 +45,17 @@ export class Cheesboard {
     fromCheesBox.pawnChees = null;
   }
 
+  swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox, resurrect = false): void {
+    const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, true);
+    if(resurrect) {
+      const resurrected = this.graveyard?.pop();
+      toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, true);
+    } else {
+      toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees?.type, fromCheesBox.pawnChees?.color, true);
+    }
+    fromCheesBox.pawnChees = tempPawnChees;
+  }
+
   eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox): void {
     if(!eaterCheesBox.pawnChees) {
       return;
