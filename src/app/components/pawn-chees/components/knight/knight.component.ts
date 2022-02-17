@@ -26,10 +26,9 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 
-  constructor(private readonly connector: ConnectorService) {
-    super();
+  constructor(readonly connector: ConnectorService) {
+    super(connector);
   }
-
   ngOnDestroy(): void {
     this.updateAllCanEatableSubs.unsubscribe();
     this.tryDefendKing.unsubscribe();
@@ -45,8 +44,8 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
-        if(cheesBoardColor.color === this.color && super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
-          this.connector.kingIsBlock$.next();
+        if(cheesBoardColor.color === this.color) {
+          super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
         }
       }
     });

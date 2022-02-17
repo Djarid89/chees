@@ -26,8 +26,8 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 
-  constructor(private readonly connector: ConnectorService) {
-    super();
+  constructor(readonly connector: ConnectorService) {
+    super(connector);
   }
 
   ngOnDestroy(): void {
@@ -45,8 +45,8 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
-        if(cheesBoardColor.color === this.color && super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
-          this.connector.kingIsBlock$.next();
+        if(cheesBoardColor.color === this.color) {
+          super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
         }
       }
     });
@@ -56,7 +56,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     let _row = row + 1;
     while(_row <= 7) {
       this.setCheesBoxStatus(board[_row][column], this.color, canBeEatable);
-      if(board[_row][column].pawnChees !== null) {
+      if(board[_row][column].pawnChees?.type !== undefined) {
         break;
       } else {
         _row++;
@@ -65,7 +65,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     _row = row - 1;
     while(_row >= 0) {
       this.setCheesBoxStatus(board[_row][column], this.color, canBeEatable);
-      if(board[_row][column].pawnChees !== null) {
+      if(board[_row][column].pawnChees?.type !== undefined) {
         break;
       } else {
         _row--;
@@ -74,7 +74,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     let _column = column + 1;
     while(_column <= 7) {
       this.setCheesBoxStatus(board[row][_column], this.color, canBeEatable);
-      if(board[row][_column].pawnChees !== null) {
+      if(board[row][_column].pawnChees?.type !== undefined) {
         break;
       } else {
         _column++;
@@ -83,7 +83,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     _column = column - 1;
     while(_column >= 0) {
       this.setCheesBoxStatus(board[row][_column], this.color, canBeEatable);
-      if(board[row][_column].pawnChees !== null) {
+      if(board[row][_column].pawnChees?.type !== undefined) {
         break;
       } else {
         _column--;

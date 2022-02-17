@@ -47,10 +47,6 @@ export class Cheesboard {
     }
   }
 
-  private isBlocked(cheesBox: CheesBox) {
-    return cheesBox.pawnChees !== null || cheesBox.canBeEatable;
-  }
-
   getOppositeTeam(currentTeam: IPawnTeam): IPawnTeam {
     return currentTeam === IPawnTeam.black ? IPawnTeam.white : IPawnTeam.black
   }
@@ -98,9 +94,13 @@ export class Cheesboard {
   }
 
   getIsMoveableOrIsEatable(): CheesBox[] {
-    let result: CheesBox[] = [];
+    const result: CheesBox[] = [];
     this.clonedBoard.forEach((row: CheesBox[]) => {
-      result = result.concat(row.filter((cheesBox: CheesBox) => cheesBox.isMoveable || cheesBox.isEatable));
+      row.forEach((cheesBox: CheesBox) => {
+        if(cheesBox.isMoveable || cheesBox.isEatable) {
+          result.push(cheesBox);
+        }
+      })
     });
     return result;
   }
