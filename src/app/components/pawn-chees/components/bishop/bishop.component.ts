@@ -34,7 +34,6 @@ export class BishopComponent extends BasePawnChees implements OnInit, OnDestroy,
     this.updateAllCanEatableSubs.unsubscribe();
   }
 
-
   ngOnInit(): void {
     this.updateAllCanEatableSubs = this.connector.updateAllCanBeEatable$.subscribe({
       next: (boardColor: IBoardColor) => {

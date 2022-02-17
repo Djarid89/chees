@@ -18,7 +18,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   initSubscription!: Subscription;
   winningTeam: IPawnTeam | undefined;
   removeAllMovableSubs!: Subscription;
-  isGameWinningSub!: Subscription;
   movePawnCheesSub!: Subscription;
   kingIsBlockSub!: Subscription;
   gameIsOverSub!: Subscription;
@@ -30,7 +29,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeAllMovableSubs.unsubscribe();
-    this.isGameWinningSub.unsubscribe();
     this.movePawnCheesSub.unsubscribe();
     this.kingIsBlockSub.unsubscribe();
     this.gameIsOverSub.unsubscribe();
@@ -42,12 +40,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.cheesboard.initBlackTeam();
     this.cheesboard.initWhiteTeam();
     setTimeout(() => {
+      this.cheesboard.resetCheesBoxCanBeEatable();
       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
     });
     this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({
       next: () => this.cheesboard.removeIsMovableAndIsEatable()
     });
-    this.connector.kingIsBlock$.subscribe({
+    this.kingIsBlockSub = this.connector.kingIsBlock$.subscribe({
       next: () => {
         this.kingIsBlockCounter++;
         if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(this.cheesboard.getOppositeTeam(this.currentTeam))) {
@@ -55,7 +54,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.connector.gameIsOver$.subscribe({
+    this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
       next: (winningTeam: IPawnTeam) => this.winningTeam = winningTeam
     })
     this.movePawnCheesSub = this.connector.movePawnChees$.subscribe({
@@ -89,7 +88,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
               } else {
                 this.cheesboard.resetCheesBoxCanBeEatable();
                 updateAllCanEatable$ = of(this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam }));
-                this.forkJoinSub = forkJoin({ updateAllCanEat$: updateAllCanEatable$ }).subscribe({
+                this.forkJoinSub2 = forkJoin({ updateAllCanEat$: updateAllCanEatable$ }).subscribe({
                   next: () => {
                     const oppositeKing = this.cheesboard.getKing(oppositeTeam);
                     if(oppositeKing.canBeEatable) {
@@ -104,9 +103,11 @@ export class ChessboardComponent implements OnInit, OnDestroy {
                       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
                       this.currentTeam = oppositeTeam;
                     }
+                    this.forkJoinSub2.unsubscribe();
                   }
                 });
               }
+              this.forkJoinSub.unsubscribe();
             }
           });
         });
