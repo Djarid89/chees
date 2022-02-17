@@ -46,7 +46,7 @@ export class BishopComponent extends BasePawnChees implements OnInit, OnDestroy,
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
         if(cheesBoardColor.color === this.color) {
-          super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
+          super.tryDefend(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
         }
       }
     });

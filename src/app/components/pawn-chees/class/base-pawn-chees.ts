@@ -32,7 +32,7 @@ export class BasePawnChees {
     }
   }
 
-  cannotFreeKing(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees, updateAllCanEat$: Subject<IBoardColor>): void {
+  tryDefend(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees, updateAllCanEat$: Subject<IBoardColor>): void {
     const cheesboard = cheesBoardColor.cheesboard;
     cheesboard.cloneCheesBoard();
     pawnChees.setCheesBoxesStatus(cheesboard.clonedBoard, pawnChees.row, pawnChees.column);
