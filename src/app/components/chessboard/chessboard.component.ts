@@ -101,15 +101,12 @@ export class ChessboardComponent implements OnInit, OnDestroy {
                   next: () => {
                     const oppositeKing = this.cheesboard.getKing(oppositeTeam);
                     if(oppositeKing.canBeEatable) {
-                      const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
-                      alert(`${col} king under check`);
+                      alert(`${oppositeTeam === IPawnTeam.black ? 'black' : 'white'} king under check`);
                       this.kingIsBlockCounter = 0;
                       this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
-                      this.currentTeam = oppositeTeam;
+                      this.passTurn(oppositeTeam);
                     } else {
-                      this.cheesboard.resetCheesBoxCanBeEatable();
-                      this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
-                      this.currentTeam = oppositeTeam;
+                      this.passTurn(oppositeTeam);
                     }
                     if(this.forkJoinSub2) {
                       this.forkJoinSub2.unsubscribe();
@@ -125,5 +122,11 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  private passTurn(oppositeTeam: IPawnTeam): void {
+    this.cheesboard.resetCheesBoxCanBeEatable();
+    this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam });
+    this.currentTeam = oppositeTeam;
   }
 }
