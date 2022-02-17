@@ -63,7 +63,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
       }
     });
     this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
-      next: (winningTeam: IPawnTeam) => this.winningTeam = winningTeam
+      next: () => this.winningTeam = this.currentTeam
     })
     this.movePawnCheesSub = this.connector.movePawnChees$.subscribe({
       next: (fromToCheesBox: IFromToCheesBox) => {

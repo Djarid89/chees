@@ -14,6 +14,6 @@ export class ConnectorService {
   movePawnChees$ = new Subject<IFromToCheesBox>();
   tryDefendKing$ = new Subject<ICheesBoardColor>();
   kingIsBlock$ = new Subject<void>();
-  gameIsOver$ = new Subject<IPawnTeam>();
+  gameIsOver$ = new Subject<void>();
   showAvaibleMovement$ = new Subject<IPawnChees>();
 }
