@@ -32,6 +32,7 @@ export class QueenComponent extends BasePawnChees implements OnInit, OnDestroy, 
 
   ngOnDestroy(): void {
     this.updateAllCanEatableSubs.unsubscribe();
+    this.tryDefendKing.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -44,7 +45,7 @@ export class QueenComponent extends BasePawnChees implements OnInit, OnDestroy, 
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
-        if(cheesBoardColor.color === this.color && this.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
+        if(cheesBoardColor.color === this.color && super.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
           this.connector.kingIsBlock$.next();
         }
       }

@@ -34,6 +34,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.kingIsBlockSub.unsubscribe();
     this.gameIsOverSub.unsubscribe();
     this.forkJoinSub.unsubscribe();
+    this.showAvaibleMovement.unsubscribe();
   }
 
   ngOnInit(): void {
