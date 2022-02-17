@@ -13,8 +13,7 @@ import { IPawnChees, IPawnCheesType } from './interface/pawn-chees';
 })
 export class PawnCheesComponent {
   @Input() cheesBox!: CheesBox;
-  @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
-  @ContentChild(PAWN_CHEES) pawnBase!: IPawnChees;
+  @ContentChild(PAWN_CHEES) pawnChees!: IPawnChees;
   @HostListener('mousedown') mouseDownEvent() { this.mouseDown() }
   @HostListener('mouseup') mouseup() { this.release() }
   @HostListener('dragend') dropEvent() { this.release() }
@@ -23,9 +22,11 @@ export class PawnCheesComponent {
   constructor(private readonly connector: ConnectorService) { }
 
   mouseDown(): void {
-    if(this.pawnBase) {
-      this.showAvaibleMovement.emit(this.pawnBase);
-
+    if(this.moveUpSubs) {
+      this.moveUpSubs.unsubscribe();
+    }
+    if(this.pawnChees) {
+      this.connector.showAvaibleMovement$.next(this.pawnChees);
       this.moveUpSubs = this.connector.moveUp$.subscribe({
         next: (toCheesBox: CheesBox) => {
           const fromCheesBox = this.cheesBox;

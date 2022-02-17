@@ -15,15 +15,16 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
   currentTeam = IPawnTeam.white;
-  initSubscription!: Subscription;
   winningTeam: IPawnTeam | undefined;
+  kingIsBlockCounter!: number;
+
   removeAllMovableSubs!: Subscription;
   movePawnCheesSub!: Subscription;
   kingIsBlockSub!: Subscription;
   gameIsOverSub!: Subscription;
   forkJoinSub!: Subscription;
   forkJoinSub2!: Subscription;
-  kingIsBlockCounter!: number;
+  showAvaibleMovement!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
 
@@ -42,6 +43,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cheesboard.resetCheesBoxCanBeEatable();
       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
+    });
+    this.showAvaibleMovement = this.connector.showAvaibleMovement$.subscribe({
+      next: (pawnChees: IPawnChees) => {
+        if(this.currentTeam === pawnChees.color) {
+          pawnChees.setCheesBoxesStatus(this.cheesboard?.board, pawnChees.row, pawnChees.column);
+        }
+      }
     });
     this.removeAllMovableSubs = this.connector.removeAllMovable$.subscribe({
       next: () => this.cheesboard.removeIsMovableAndIsEatable()
@@ -116,11 +124,5 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  showAvaibleMovement(pawnChees: IPawnChees): void {
-    if(pawnChees && this.currentTeam === pawnChees.color) {
-      pawnChees.setCheesBoxesStatus(this.cheesboard?.board, pawnChees.row, pawnChees.column);
-    }
   }
 }

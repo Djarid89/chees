@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IPawnChees, IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
+import { Component, Input } from '@angular/core';
+import { IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
 import { CheesBox } from './class/chees-box';
 
 @Component({
@@ -9,12 +9,5 @@ import { CheesBox } from './class/chees-box';
 })
 export class CheesBoxComponent {
   @Input() cheesBox!: CheesBox;
-  @Output() showAvaibleMovement = new EventEmitter<IPawnChees>();
-  @Output() setCheesBoxesCanEat = new EventEmitter<IPawnChees>();
-  @Output() removeAllMovable = new EventEmitter<IPawnChees>();
   IPawnCheesType = IPawnCheesType;
-
-  propagateShowAvaibleMovement(pawnChees: IPawnChees) {
-    this.showAvaibleMovement.emit(pawnChees);
-  }
 }
