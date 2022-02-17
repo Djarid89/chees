@@ -92,12 +92,10 @@ export class ChessboardComponent implements OnInit, OnDestroy {
                   next: () => {
                     const oppositeKing = this.cheesboard.getKing(oppositeTeam);
                     if(oppositeKing.canBeEatable) {
-                      if(this.cheesboard.kingUnderCheck(oppositeTeam)) {
-                        const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
-                        alert(`${col} king under check`);
-                        this.kingIsBlockCounter = 0;
-                        this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
-                      }
+                      const col = oppositeTeam === IPawnTeam.black ? 'black' : 'white';
+                      alert(`${col} king under check`);
+                      this.kingIsBlockCounter = 0;
+                      this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
                       this.currentTeam = oppositeTeam;
                     } else {
                       this.cheesboard.resetCheesBoxCanBeEatable();

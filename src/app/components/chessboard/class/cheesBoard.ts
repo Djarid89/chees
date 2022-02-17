@@ -47,36 +47,6 @@ export class Cheesboard {
     }
   }
 
-  kingUnderCheck(color: IPawnTeam): boolean {
-    const king = this.getKing(color);
-    let isBlocked = true;
-    if(king.row + 1 <= 7 && king.column + 1 <= 7) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row + 1][king.column + 1]);
-    }
-    if(king.column + 1 <= 7) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row][king.column + 1]);
-    }
-    if(king.row - 1 >= 0 && king.column + 1 <= 7) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row - 1][king.column + 1]);
-    }
-    if(king.row - 1 >= 0) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row - 1][king.column]);
-    }
-    if(king.row - 1 >= 0 && king.column - 1 >= 0) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row - 1][king.column - 1]);
-    }
-    if(king.column - 1 >= 0) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row][king.column - 1]);
-    }
-    if(king.row + 1 <= 7 &&  king.column - 1 >= 0) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row + 1][king.column - 1]);
-    }
-    if(king.row + 1 <= 7) {
-      isBlocked = isBlocked && this.isBlocked(this.board[king.row + 1][king.column]);
-    }
-    return isBlocked;
-  }
-
   private isBlocked(cheesBox: CheesBox) {
     return cheesBox.pawnChees !== null || cheesBox.canBeEatable;
   }
