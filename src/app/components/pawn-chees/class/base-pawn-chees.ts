@@ -12,24 +12,24 @@ export class BasePawnChees {
       cheesBox.canBeEatable = true;
     } else {
       if(isKing) {
-        cheesBox.isMoveable = cheesBox.pawnChees === null && !cheesBox.canBeEatable;
+        cheesBox.isMoveable = !cheesBox.pawnChees?.type && !cheesBox.canBeEatable;
         cheesBox.isEatable = this.isOppositeColor(cheesBox, color) && !cheesBox.canBeEatable;
       } else {
-        cheesBox.isMoveable = cheesBox.pawnChees === null;
+        cheesBox.isMoveable = !cheesBox.pawnChees?.type;
         cheesBox.isEatable = this.isOppositeColor(cheesBox, color);
       }
     }
   }
 
   isOppositeColor(cheesBox: CheesBox, color: IPawnTeam | undefined): boolean {
-    if(!cheesBox.pawnChees) {
+    if(!cheesBox.pawnChees?.type) {
       return false;
     } else {
       return cheesBox.pawnChees.color !== color;
     }
   }
 
-  isKingBlocked(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees, updateAllCanEat$: Subject<IBoardColor>): boolean {
+  cannotFreeKing(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees, updateAllCanEat$: Subject<IBoardColor>): boolean {
     const cheesboard = cheesBoardColor.cheesboard;
     cheesboard.cloneCheesBoard();
     pawnChees.setCheesBoxesStatus(cheesboard.clonedBoard, pawnChees.row, pawnChees.column);

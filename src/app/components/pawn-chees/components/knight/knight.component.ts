@@ -44,7 +44,7 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
-        if(cheesBoardColor.color === this.color && this.isKingBlocked(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
+        if(cheesBoardColor.color === this.color && this.cannotFreeKing(cheesBoardColor, this, this.connector.updateAllCanBeEatable$)) {
           this.connector.kingIsBlock$.next();
         }
       }
