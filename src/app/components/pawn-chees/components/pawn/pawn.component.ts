@@ -47,7 +47,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
         if(cheesBoardColor.color === this.color) {
-          super.tryDefend(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
+          super.tryAllPossibleMove(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
         }
       }
     });

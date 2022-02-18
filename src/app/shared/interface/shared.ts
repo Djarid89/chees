@@ -4,7 +4,13 @@ import { Cheesboard } from "../../components/chessboard/class/cheesBoard";
 
 export interface IBoardColor {
   board: CheesBox[][],
-  color: IPawnTeam
+  color: IPawnTeam,
+  typeOfControl?: TypeOfControl
+}
+
+export interface asd {
+  isMoveableOrEatableCheesBox: CheesBox[],
+  counter: number
 }
 
 export interface ICheesBoardColor {
@@ -21,4 +27,10 @@ export interface IFromToCheesBox {
 export enum Action {
   move = 1,
   eat
+}
+
+export enum TypeOfControl {
+  kingIsSafe = 1,
+  opponentKingIsCaptured,
+  defenderCannotFreeKing
 }
