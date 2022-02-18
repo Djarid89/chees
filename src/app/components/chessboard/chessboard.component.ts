@@ -98,7 +98,8 @@ export class ChessboardComponent implements OnInit, OnDestroy {
 
     this.isMyKingSafeSub = this.connector.isMyKingSafe$.subscribe({
       next: () => {
-        if(!this.allPawnCheesHasEmitted(this.cheesboard.getOppositeTeam(this.currentTeam))) {
+        const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
+        if(!this.allPawnCheesHasEmitted(oppositeTeam)) {
           return;
         }
         const myKing = this.cheesboard.getKing(this.currentTeam);
@@ -109,11 +110,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           } else {
             this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox, true);
           }
-          setTimeout(() => {
-            this.counter = 0;
-            this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
-            this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam, typeOfControl: TypeOfControl.opponentKingIsCaptured });
-          });
         } else {
           this.counter = 0;
           this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);

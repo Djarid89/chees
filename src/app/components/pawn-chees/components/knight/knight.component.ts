@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
-import { IBoardColor, ICheesBoardColor } from '../../../../shared/interface/shared';
+import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
@@ -36,16 +36,24 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
 
   ngOnInit(): void {
     this.updateAllCanEatableSubs = this.connector.updateAllCanBeEatable$.subscribe({
-      next: (boardColor: IBoardColor) => {
-        if(boardColor.color === this.color) {
-          this.setCheesBoxesCanEat(boardColor.board);
+      next: (data: IBoardColor) => {
+        if(data.color === this.color) {
+          this.setCheesBoxesCanEat(data.board);
+
+          if(data.typeOfControl === TypeOfControl.kingIsSafe) {
+            this.connector.isMyKingSafe$.next();
+          } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
+            this.connector.isOppositeKingCaptured$.next();
+          } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
+            super.isAllCanEatabled$.next();
+          }
         }
       }
     });
     this.tryDefendKing = this.connector.tryDefendKing$.subscribe({
       next: (cheesBoardColor: ICheesBoardColor) => {
         if(cheesBoardColor.color === this.color) {
-          super.tryAllPossibleMove(cheesBoardColor, this, this.connector.updateAllCanBeEatable$);
+          super.tryAllPossibleMove(cheesBoardColor, this);
         }
       }
     });
