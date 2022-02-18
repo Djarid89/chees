@@ -39,10 +39,10 @@ export class Cheesboard {
     }
   }
 
-  resetCheesBoxCanBeEatable(): void {
+  resetCheesBoxCanBeEatable(board: CheesBox[][]): void {
     for(let i = 0; i < 8; i++) {
       for(let j = 0; j < 8; j++) {
-        this.board[i][j].canBeEatable = false;
+        board[i][j].canBeEatable = false;
       }
     }
   }
