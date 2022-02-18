@@ -47,7 +47,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
           } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
             this.connector.isOppositeKingCaptured$.next();
           } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
-            super.isAllCanEatabled$.next();
+            this.isAllCanEatabled$.next();
           }
         }
       }

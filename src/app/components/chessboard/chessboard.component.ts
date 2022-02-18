@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { Action, IFromToCheesBox, TypeOfControl } from '../../shared/interface/shared';
 import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
@@ -46,11 +46,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.cheesboard.initWhiteTeam();
     setTimeout(() => {
       this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
-      this.connector.updateAllCanBeEatable$.next({
-        board: this.cheesboard.board,
-        color: this.cheesboard.getOppositeTeam(this.currentTeam),
-        typeOfControl: TypeOfControl.kingIsSafe
-      });
+      this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
     });
 
     this.showAvaibleMovement = this.connector.showAvaibleMovement$.subscribe({
@@ -143,11 +139,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   }
 
   private allPawnCheesHasEmitted(team: IPawnTeam) {
-    if(this.counter < this.cheesboard.getNumberPawnChees(team)) {
-      this.counter++
-      return false;
-    } else {
-      return true;
-    }
+    this.counter++
+    return this.counter === this.cheesboard.getNumberPawnChees(team);
   }
 }

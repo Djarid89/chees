@@ -46,7 +46,7 @@ export class BishopComponent extends BasePawnChees implements OnInit, OnDestroy,
           } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
             this.connector.isOppositeKingCaptured$.next();
           } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
-            super.isAllCanEatabled$.next();
+            this.isAllCanEatabled$.next();
           }
         }
       }

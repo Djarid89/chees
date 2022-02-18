@@ -1,6 +1,6 @@
 import { Subject, Subscription } from "rxjs";
 import { ConnectorService } from "../../../service/connector.service";
-import { IBoardColor, ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
+import { ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
 import { CheesBox } from "../../chees-box/class/chees-box";
 import { IPawnChees, IPawnTeam } from "../interface/pawn-chees";
 
