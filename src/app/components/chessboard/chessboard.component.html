@@ -1,0 +1,12 @@
+<div *ngIf="winningTeam">{{winningTeam}}</div>
+<horizontal-bar></horizontal-bar>
+<div class="flex-container">
+  <vertical-bar [barItems]="number"></vertical-bar>
+  <div>
+    <div class="row" *ngFor="let row of cheesboard.board; index as horIndex">
+      <chees-box *ngFor="let cheesBox of row; index as vertIndex" [cheesBox]="cheesBox"></chees-box>
+    </div>
+  </div>
+  <vertical-bar></vertical-bar>
+</div>
+<horizontal-bar [barItems]="letter"></horizontal-bar>

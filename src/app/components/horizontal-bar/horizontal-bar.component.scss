@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  height: 25px;
+}
+
+.filler {
+  width: 25px;
+  background-image: url(../../../assets/angle.PNG);
+  background-size: cover;
+}
+
+div {
+  width: 100px;
+  height: 25px;
+  background-image:url(../../../assets/frame-hor.PNG);
+  background-size: cover;
+  color: #F0E9A5;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}

@@ -1,0 +1,15 @@
+:host {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.row {
+  display: flex;
+  height: 100px;
+}
