@@ -45,7 +45,7 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
           } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
             this.connector.isOppositeKingCaptured$.next();
           } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
-            this.isAllCanEatabled$.next();
+            this.connector.isAllCanEatabled$.next();
           }
         }
       }

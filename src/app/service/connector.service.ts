@@ -18,4 +18,5 @@ export class ConnectorService {
   showAvaibleMovement$ = new Subject<IPawnChees>();
   isMyKingSafe$ = new Subject<void>();
   isOppositeKingCaptured$ = new Subject<void>();
+  isAllCanEatabled$ = new Subject<void>();
 }

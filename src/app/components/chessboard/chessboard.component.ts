@@ -64,14 +64,14 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.kingIsBlockSub = this.connector.kingIsBlock$.subscribe({
       next: () => {
         this.kingIsBlockCounter++;
-        if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(this.cheesboard.getOppositeTeam(this.currentTeam))) {
+        if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(this.currentTeam)) {
           this.connector.gameIsOver$.next();
         }
       }
     });
 
     this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
-      next: () => this.winningTeam = this.currentTeam
+      next: () => this.winningTeam = this.cheesboard.getOppositeTeam(this.currentTeam)
     });
 
     this.isOppositeKingCapturedSub = this.connector.isOppositeKingCaptured$.subscribe({

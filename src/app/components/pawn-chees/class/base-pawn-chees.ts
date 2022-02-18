@@ -1,4 +1,4 @@
-import { Subject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { ConnectorService } from "../../../service/connector.service";
 import { ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
 import { CheesBox } from "../../chees-box/class/chees-box";
@@ -7,7 +7,6 @@ import { IPawnChees, IPawnTeam } from "../interface/pawn-chees";
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
   forkJoinSub! : Subscription;
-  isAllCanEatabled$ = new Subject<void>();
   counter!: number;
   isMoveableOrEatableCheesBox!: CheesBox[];
 
@@ -38,7 +37,7 @@ export class BasePawnChees {
   }
 
   tryAllPossibleMove(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees): void {
-    const isAllCanEatabledSub = this.isAllCanEatabled$.subscribe({
+    const isAllCanEatabledSub = this.connector.isAllCanEatabled$.subscribe({
       next: () => {
         if(!cheesboard.getKing(cheesBoardColor.color).canBeEatable) {
           isAllCanEatabledSub.unsubscribe();
