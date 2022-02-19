@@ -2,7 +2,7 @@
 <div class="flex-container">
   <vertical-bar [barItems]="number"></vertical-bar>
   <div>
-    <div class="row" *ngFor="let row of cheesboard.board; index as horIndex">
+    <div class="row" *ngFor="let row of cheesboard?.board; index as horIndex">
       <div *ngFor="let cheesBox of row; index as vertIndex">
         <div class="cheesBox" [ngClass]="isPair(horIndex, vertIndex) ? 'white' : 'brown'">
           <ng-container *ngIf="cheesBox.pawnChees">

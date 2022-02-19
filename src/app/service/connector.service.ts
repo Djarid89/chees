@@ -19,5 +19,5 @@ export class ConnectorService {
   isMyKingSafe$ = new Subject<void>();
   isOppositeKingCaptured$ = new Subject<void>();
   isAllCanEatabled$ = new Subject<void>();
-  showModal$ = new BehaviorSubject<IModalContent>({});
+  showModal$ = new BehaviorSubject<IModalContent | null>(null);
 }

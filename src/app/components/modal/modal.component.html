@@ -1,6 +1,8 @@
-<div *ngIf="content">
-  <div *ngIf="content.title">{{content.title}}</div>
-  <div *ngIf="content.text">{{content.text}}</div>
-  <read-only-cheesboard *ngIf="content.cheesBoard" [cheesboard]="content.cheesBoard"></read-only-cheesboard>
-  <button (click)="close()"></button>
+<div class="modal" *ngIf="content">
+  <div class="content" [ngStyle]="{'width': width, 'height': height}">
+    <h1 *ngIf="content.title">{{content.title}}</h1>
+    <p *ngIf="content.text">{{content.text}}</p>
+    <read-only-cheesboard *ngIf="content.cheesBoard" [cheesboard]="content.cheesBoard"></read-only-cheesboard>
+    <button *ngIf="showButton" (click)="close()">CLOSE</button>
+  </div>
 </div>

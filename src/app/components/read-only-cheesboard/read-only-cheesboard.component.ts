@@ -8,7 +8,7 @@ import { IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
   styleUrls: ['./read-only-cheesboard.component.scss']
 })
 export class ReadOnlyCheesboardComponent implements OnInit {
-  @Input() cheesboard!: Cheesboard;
+  @Input() cheesboard?: Cheesboard;
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
   IPawnCheesType = IPawnCheesType;
