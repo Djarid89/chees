@@ -11,7 +11,8 @@ export interface IPawnChees {
 }
 
 export enum IPawnCheesType {
-  pawn = 0,
+  empty = 0,
+  pawn,
   bishop,
   king,
   knight,

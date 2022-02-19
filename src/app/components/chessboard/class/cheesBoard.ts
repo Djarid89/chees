@@ -4,7 +4,7 @@ import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees
 export class Cheesboard {
   board!: CheesBox[][];
   clonedBoard!: CheesBox[][];
-  graveyard: PawnChees[] = [];
+  static graveyard: PawnChees[] = [];
 
   constructor() {
     this.board = [];
@@ -62,7 +62,7 @@ export class Cheesboard {
   swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox, resurrect = false): void {
     const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, true);
     if(resurrect) {
-      const resurrected = this.graveyard?.pop();
+      const resurrected = Cheesboard.popGraveyard();
       toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, true);
     } else {
       toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees?.type, fromCheesBox.pawnChees?.color, true);
@@ -75,10 +75,19 @@ export class Cheesboard {
       return;
     }
     if(eatenCheesBox.pawnChees) {
-      this.graveyard.push(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, true));
+      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, true));
     }
     eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, true);
     eaterCheesBox.pawnChees = null;
+  }
+
+  static pushGraveyard(pawnChees: PawnChees) {
+    this.graveyard.push(pawnChees);
+  }
+
+  static popGraveyard(): PawnChees | undefined {
+    const pawnChees = this.graveyard?.pop();
+    return pawnChees;
   }
 
   getKing(color: IPawnTeam): CheesBox {

@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
 import { CheesBox, PawnChees } from '../../../chees-box/class/chees-box';
@@ -35,11 +36,14 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   ngOnDestroy(): void {
     this.updateAllCanEatableSubs.unsubscribe();
     this.tryDefendKing.unsubscribe();
-    this.doResurrect.unsubscribe();
+    if(this.doResurrect) {
+      this.doResurrect.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     if((this.color === IPawnTeam.white && this.row === 0) || (this.color === IPawnTeam.black && this.row === 7)) {
+      this.connector.resurrect$.next(Cheesboard.graveyard);
       this.doResurrect = this.connector.doResurrect$.subscribe({
         next: (type: IPawnCheesType) => {
           this.type = type;
