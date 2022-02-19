@@ -4,7 +4,7 @@ import { ConnectorService } from '../../service/connector.service';
 import { Action } from '../../shared/interface/shared';
 import { CheesBox } from '../chees-box/class/chees-box';
 import { PAWN_CHEES } from './components/pawn-chees.token';
-import { IPawnChees, IPawnCheesType } from './interface/pawn-chees';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from './interface/pawn-chees';
 
 @Component({
   selector: 'pawn-chees',

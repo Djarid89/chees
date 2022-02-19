@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
-import { CheesBox } from '../../../chees-box/class/chees-box';
+import { CheesBox, PawnChees } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
@@ -26,6 +26,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() doubleMove: boolean  | undefined;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
+  doResurrect!: Subscription;
 
   constructor(readonly connector: ConnectorService) {
     super(connector);
@@ -34,9 +35,17 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   ngOnDestroy(): void {
     this.updateAllCanEatableSubs.unsubscribe();
     this.tryDefendKing.unsubscribe();
+    this.doResurrect.unsubscribe();
   }
 
   ngOnInit(): void {
+    if((this.color === IPawnTeam.white && this.row === 0) || (this.color === IPawnTeam.black && this.row === 7)) {
+      this.doResurrect = this.connector.doResurrect$.subscribe({
+        next: (type: IPawnCheesType) => {
+          this.type = type;
+        }
+      });
+    }
     this.updateAllCanEatableSubs = this.connector.updateAllCanBeEatable$.subscribe({
       next: (data: IBoardColor) => {
         if(data.color === this.color) {

@@ -1,5 +1,5 @@
-import { CheesBox } from "src/app/components/chees-box/class/chees-box";
-import { IPawnTeam } from "src/app/components/pawn-chees/interface/pawn-chees";
+import { CheesBox, PawnChees } from "src/app/components/chees-box/class/chees-box";
+import { IPawnChees, IPawnTeam } from "src/app/components/pawn-chees/interface/pawn-chees";
 import { Cheesboard } from "../../components/chessboard/class/cheesBoard";
 
 export interface IBoardColor {
@@ -33,6 +33,7 @@ export interface IModalContent {
    cheesBoard?: Cheesboard;
    winningTeam?: IPawnTeam;
    showButton?: boolean;
+   graveyard?: PawnChees[];
 }
 
 export enum Action {

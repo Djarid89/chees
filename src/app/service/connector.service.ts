@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { CheesBox } from '../components/chees-box/class/chees-box';
-import { IPawnChees } from '../components/pawn-chees/interface/pawn-chees';
+import { CheesBox, PawnChees } from '../components/chees-box/class/chees-box';
+import { IPawnChees, IPawnCheesType } from '../components/pawn-chees/interface/pawn-chees';
 import { asd, IBoardColor, ICheesBoardColor, IFromToCheesBox, IModalContent } from '../shared/interface/shared';
 
 @Injectable({
@@ -20,4 +20,6 @@ export class ConnectorService {
   isOppositeKingCaptured$ = new Subject<void>();
   isAllCanEatabled$ = new Subject<void>();
   showModal$ = new BehaviorSubject<IModalContent | null>(null);
+  resurrect$ = new Subject<PawnChees[]>();
+  doResurrect$ = new Subject<IPawnCheesType>();
 }

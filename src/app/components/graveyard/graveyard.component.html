@@ -1,0 +1,8 @@
+<div class="container" (click)="resurrection(pawnChees)" *ngFor="let pawnChees of graveyard">
+  <pawn *ngSwitchCase="IPawnCheesType.pawn"></pawn>
+  <bishop *ngSwitchCase="IPawnCheesType.bishop"></bishop>
+  <king *ngSwitchCase="IPawnCheesType.king"></king>
+  <knight *ngSwitchCase="IPawnCheesType.knight"></knight>
+  <queen *ngSwitchCase="IPawnCheesType.queen"></queen>
+  <rook *ngSwitchCase="IPawnCheesType.rook"></rook>
+</div>

@@ -1,4 +1,4 @@
-import { CheesBox } from "../../chees-box/class/chees-box";
+import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
 
 export interface IPawnChees {
   row: number;
@@ -11,8 +11,7 @@ export interface IPawnChees {
 }
 
 export enum IPawnCheesType {
-  empty = 0,
-  pawn,
+  pawn = 0,
   bishop,
   king,
   knight,
