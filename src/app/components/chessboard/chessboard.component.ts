@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
-import { Action, IFromToCheesBox, TypeOfControl } from '../../shared/interface/shared';
+import { Action, IFromToCheesBox, IModalContent, TypeOfControl } from '../../shared/interface/shared';
 import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
@@ -15,7 +15,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
   currentTeam = IPawnTeam.white;
-  winningTeam: IPawnTeam | undefined;
   kingIsBlockCounter!: number;
   counter!: number;
 
@@ -71,7 +70,9 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     });
 
     this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
-      next: () => this.winningTeam = this.cheesboard.getOppositeTeam(this.currentTeam)
+      next: () => {
+        this.connector.showModal$.next({ title: `GAME IS OVER`, text: `Team ${this.cheesboard.getOppositeTeam(this.currentTeam)} win!!!`, cheesBoard: this.cheesboard });
+      }
     });
 
     this.isOppositeKingCapturedSub = this.connector.isOppositeKingCaptured$.subscribe({
@@ -82,7 +83,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
         const oppositeKing = this.cheesboard.getKing(oppositeTeam);
         if(oppositeKing.canBeEatable) {
-          alert(`${oppositeTeam === IPawnTeam.black ? 'black' : 'white'} king under check`);
+          this.connector.showModal$.next({ title: `KING IS UNDER CHECK`, text: `${oppositeTeam === IPawnTeam.black ? 'black' : 'white'} king under check` });
           this.kingIsBlockCounter = 0;
           this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
           this.passTurn(oppositeTeam);
@@ -100,7 +101,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         }
         const myKing = this.cheesboard.getKing(this.currentTeam);
         if(myKing.canBeEatable) {
-          alert('Your move discovered the king');
+          this.connector.showModal$.next({ title: `UNDO MOVE`, text: `Your move discovered the king` });
           if(this.fromToCheesBox.action === Action.move) {
             this.cheesboard.movePawnChees(this.fromToCheesBox.toCheesBox, this.fromToCheesBox.fromCheesBox);
           } else {

@@ -1,0 +1,6 @@
+<div *ngIf="content">
+  <div *ngIf="content.title">{{content.title}}</div>
+  <div *ngIf="content.text">{{content.text}}</div>
+  <read-only-cheesboard *ngIf="content.cheesBoard" [cheesboard]="content.cheesBoard"></read-only-cheesboard>
+  <button (click)="close()"></button>
+</div>

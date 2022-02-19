@@ -24,6 +24,13 @@ export interface IFromToCheesBox {
   action: Action
 }
 
+export interface IModalContent {
+   title?: string,
+   text?: string,
+   cheesBoard?: Cheesboard,
+   winningTeam?: IPawnTeam
+}
+
 export enum Action {
   move = 1,
   eat
