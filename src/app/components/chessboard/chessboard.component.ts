@@ -106,7 +106,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
             text: `${oppositeTeam === IPawnTeam.black ? 'Black' : 'White'} king under check`,
             height: 180,
             width: 500,
-            ttl: 5000
+            ttl: 3000
           });
           this.kingIsBlockCounter = 0;
           this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
