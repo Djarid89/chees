@@ -21,4 +21,5 @@ export class ConnectorService {
   isAllCanEatabled$ = new Subject<void>();
   showModal$ = new BehaviorSubject<IModalContent | undefined>(undefined);
   doResurrect$ = new Subject<IPawnCheesType>();
+  resurrect$ = new Subject<IPawnChees>();
 }

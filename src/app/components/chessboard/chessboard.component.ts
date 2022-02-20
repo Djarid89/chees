@@ -25,6 +25,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   showAvaibleMovement!: Subscription;
   isMyKingSafeSub!: Subscription;
   isOppositeKingCapturedSub!: Subscription;
+  resurrectSub!: Subscription;
   fromToCheesBox!: IFromToCheesBox;
 
   constructor(private readonly connector: ConnectorService) { }
@@ -37,6 +38,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.showAvaibleMovement.unsubscribe();
     this.isMyKingSafeSub.unsubscribe();
     this.isOppositeKingCapturedSub.unsubscribe();
+    this.resurrectSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -46,6 +48,15 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
+    });
+
+    this.resurrectSub = this.connector.resurrect$.subscribe({
+      next: (pawnChees: IPawnChees) => {
+        const cheesBox = this.cheesboard.board[pawnChees.row][pawnChees.column];
+        if(cheesBox && cheesBox.pawnChees) {
+          cheesBox.pawnChees.type = pawnChees.type;
+        }
+      }
     });
 
     this.showAvaibleMovement = this.connector.showAvaibleMovement$.subscribe({

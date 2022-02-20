@@ -53,7 +53,8 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
       });
       this.doResurrect = this.connector.doResurrect$.subscribe({
         next: (type: IPawnCheesType) => {
-          this.type = type;
+          this.type = type
+          this.connector.resurrect$.next(this);
         }
       });
     }
