@@ -19,15 +19,15 @@ export class Cheesboard {
   initWhiteTeam(): void {
     this.setPawn(6, IPawnTeam.white);
     this.setServant(7, IPawnTeam.white);
-    this.board[7][4] = new CheesBox(7, 4, new PawnChees(IPawnCheesType.queen, IPawnTeam.white));
-    this.board[7][3] = new CheesBox(7, 3, new PawnChees(IPawnCheesType.king, IPawnTeam.white));
+    this.board[7][3] = new CheesBox(7, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.white));
+    this.board[7][4] = new CheesBox(7, 4, new PawnChees(IPawnCheesType.king, IPawnTeam.white, true));
   }
 
   initBlackTeam(): void {
     this.setPawn(1, IPawnTeam.black);
     this.setServant(0, IPawnTeam.black);
-    this.board[0][4] = new CheesBox(0, 4, new PawnChees(IPawnCheesType.king, IPawnTeam.black));
-    this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.black));
+    this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.king, IPawnTeam.black));
+    this.board[0][4] = new CheesBox(0, 4, new PawnChees(IPawnCheesType.queen, IPawnTeam.black, true));
   }
 
   removeIsMovableAndIsEatable(): void {
@@ -55,18 +55,13 @@ export class Cheesboard {
     if(!fromCheesBox.pawnChees) {
       return;
     }
-    toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees.type, fromCheesBox.pawnChees.color, true);
+    toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees.type, fromCheesBox.pawnChees.color);
     fromCheesBox.pawnChees = null;
   }
 
-  swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox, resurrect = false): void {
-    const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, true);
-    if(resurrect) {
-      const resurrected = Cheesboard.popGraveyard();
-      toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, true);
-    } else {
-      toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees?.type, fromCheesBox.pawnChees?.color, true);
-    }
+  swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
+    const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color);
+    toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees?.type, fromCheesBox.pawnChees?.color);
     fromCheesBox.pawnChees = tempPawnChees;
   }
 
@@ -75,9 +70,9 @@ export class Cheesboard {
       return;
     }
     if(eatenCheesBox.pawnChees) {
-      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, true));
+      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color));
     }
-    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, true);
+    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color);
     eaterCheesBox.pawnChees = null;
   }
 
@@ -100,6 +95,18 @@ export class Cheesboard {
       }
     }
     return king;
+  }
+
+  getRook(color: IPawnTeam, column: number): CheesBox {
+    let rook = new CheesBox();
+    for(const row of this.board) {
+      for(const cheesBox of row) {
+        if(cheesBox.pawnChees?.type === IPawnCheesType.rook && cheesBox.pawnChees?.color === color && cheesBox.column === column) {
+          rook = cheesBox;
+        }
+      }
+    }
+    return rook;
   }
 
   getIsMoveableOrIsEatable(): CheesBox[] {
@@ -132,7 +139,7 @@ export class Cheesboard {
       this.clonedBoard[i] = [];
       for(let j = 0; j < 8; j++) {
         const pawnChees = this.board[i][j].pawnChees;
-        this.clonedBoard[i][j] = new CheesBox(i, j, new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.doubleMove));
+        this.clonedBoard[i][j] = new CheesBox(i, j, new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.firstMove));
       }
     }
   }
@@ -149,16 +156,16 @@ export class Cheesboard {
 
   private setPawn(row: number, color: IPawnTeam): void {
     for(let i = 0; i < 8; i++) {
-      this.board[row][i] = new CheesBox(row, i, new PawnChees(IPawnCheesType.pawn, color));
+      this.board[row][i] = new CheesBox(row, i, new PawnChees(IPawnCheesType.pawn, color, true));
     }
   }
 
   private setServant(row: number, color: IPawnTeam): void {
-    this.board[row][0] = new CheesBox(row, 0, new PawnChees(IPawnCheesType.rook, color));
-    this.board[row][7] = new CheesBox(row, 7, new PawnChees(IPawnCheesType.rook, color));
-    this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
-    this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
-    this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
-    this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
+    this.board[row][0] = new CheesBox(row, 0, new PawnChees(IPawnCheesType.rook, color, true));
+    this.board[row][7] = new CheesBox(row, 7, new PawnChees(IPawnCheesType.rook, color, true));
+    // this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
+    // this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
+    // this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
+    // this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
   }
 }

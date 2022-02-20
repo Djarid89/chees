@@ -46,7 +46,7 @@ export class ModalComponent implements OnInit, OnDestroy {
             
           }
           this.pawnCheeses = content?.graveyard?.pawnCheeses.filter((pawnchees: PawnChees) => pawnchees.type !== IPawnCheesType.pawn && pawnchees.color === content.graveyard?.color)
-            .map((pawnchees: PawnChees) => new PawnChees(pawnchees.type, pawnchees.color, pawnchees.doubleMove));
+            .map((pawnchees: PawnChees) => new PawnChees(pawnchees.type, pawnchees.color, pawnchees.firstMove));
           this.cheesboard = content?.cheesBoard;
         })
       }

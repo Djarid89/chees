@@ -25,11 +25,11 @@ export class CheesBox {
 export class PawnChees {
   type: IPawnCheesType | undefined;
   color: IPawnTeam | undefined;
-  doubleMove: boolean;
+  firstMove: boolean;
 
-  constructor(type?: IPawnCheesType, color?: IPawnTeam, doubleMove = false) {
+  constructor(type?: IPawnCheesType, color?: IPawnTeam, doubleMove = true) {
     this.type = type || undefined;
     this.color = color || undefined;
-    this.doubleMove = doubleMove ? false : type === IPawnCheesType.pawn;
+    this.firstMove = doubleMove;
   }
 }

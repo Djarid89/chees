@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
@@ -23,8 +24,9 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
-  updateAllCanEatableSubs!: Subscription;
   @Input() dead = false;
+  @Input() firstMove?: boolean;
+  updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 
   constructor(readonly connector: ConnectorService) {
@@ -86,6 +88,50 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
     if(row + 1 <= 7) {
       this.setCheesBoxStatus(board[row + 1][column], this.color, canBeEatable, true);
     }
+    if(this.firstMove && !board[this.row][this.column].isEatable) {
+      const towerCheesBox = this.canLeftCastling(board);
+      towerCheesBox.forEach((tower: CheesBox) => {
+        if(tower.column === 0) {
+          if(this.column - 2 >= 0) {
+            this.setCheesBoxStatus(board[this.row][this.column - 2], this.color, canBeEatable, true);
+          }
+        } else {
+          if(this.column + 2 <= 7) {
+            this.setCheesBoxStatus(board[this.row][this.column + 2], this.color, canBeEatable, true);
+          }
+        }
+      });
+    }
+  }
+
+  canLeftCastling(board: CheesBox[][]): CheesBox[] {
+    let result = [];
+    let _column = this.column - 1;
+    while(_column >= 0) {
+      const pawnChees = board[this.row][_column].pawnChees;
+      if(pawnChees !== null) {
+        if(pawnChees.color === this.color && pawnChees.type === IPawnCheesType.rook && pawnChees.firstMove) {
+          result.push(board[this.row][_column]);
+        } else {
+          break;
+        }
+      }
+      _column--;
+    }
+    _column = this.column + 1;
+    while(_column <= 7) {
+      const pawnChees = board[this.row][_column].pawnChees;
+      if(pawnChees !== null) {
+        if(pawnChees.color === this.color && pawnChees.type === IPawnCheesType.rook && pawnChees.firstMove) {
+          result.push(board[this.row][_column]);
+        } else {
+          break;
+        }
+      }
+      _column++;
+    }
+
+    return result;
   }
 
   setCheesBoxesCanEat(board: CheesBox[][]) {

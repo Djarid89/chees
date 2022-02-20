@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { Action, IFromToCheesBox, IModalContent, TypeOfControl } from '../../shared/interface/shared';
-import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
+import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
 @Component({
@@ -116,7 +117,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           if(this.fromToCheesBox.action === Action.move) {
             this.cheesboard.movePawnChees(this.fromToCheesBox.toCheesBox, this.fromToCheesBox.fromCheesBox);
           } else {
-            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox, true);
+            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox);
           }
         } else {
           this.counter = 0;
@@ -129,10 +130,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.movePawnCheesSub = this.connector.movePawnChees$.subscribe({
       next: (fromToCheesBox: IFromToCheesBox) => {
         this.fromToCheesBox = fromToCheesBox;
+        const from = fromToCheesBox.fromCheesBox;
+        const to = fromToCheesBox.toCheesBox;
         if(fromToCheesBox.action === Action.move) {
-          this.cheesboard.movePawnChees(fromToCheesBox.fromCheesBox, fromToCheesBox.toCheesBox);
+          this.cheesboard.movePawnChees(from, to);
+          this.tryCastling(from, to);
         } else {
-          this.cheesboard.eatPawnChees(fromToCheesBox.fromCheesBox, fromToCheesBox.toCheesBox);
+          this.cheesboard.eatPawnChees(from, to);
         }
         setTimeout(() => {
           const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
@@ -142,6 +146,20 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  private tryCastling(from: CheesBox, to: CheesBox) {
+    if(to.pawnChees?.type === IPawnCheesType.king) {
+      if(from.column > to.column && from.column - to.column === 2) {
+        const fromRookCheesBox = this.cheesboard.getRook(this.currentTeam, 0);
+        const toTower = this.cheesboard.board[from.row][from.column - 1];
+        this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
+      } else if(to.column > from.column && to.column - from.column === 2) {
+        const fromRookCheesBox = this.cheesboard.getRook(this.currentTeam, 7);
+        const toTower = this.cheesboard.board[from.row][from.column + 1]; 
+        this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
+      }
+    }
   }
 
   private passTurn(oppositeTeam: IPawnTeam): void {

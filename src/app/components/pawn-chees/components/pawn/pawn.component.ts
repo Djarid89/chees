@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
-import { CheesBox, PawnChees } from '../../../chees-box/class/chees-box';
+import { CheesBox } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
@@ -24,7 +24,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined;
   @Input() color: IPawnTeam  | undefined;
-  @Input() doubleMove: boolean  | undefined;
+  @Input() firstMove?: boolean;
   @Input() dead = false;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
@@ -94,7 +94,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
         board[_row][column - 1].isEatable = this.isOppositeColor(board[_row][column - 1], this.color);
       }
     }
-    if(this.doubleMove && (_doubleRow <= 7 && _doubleRow >= 0)) {
+    if(this.firstMove && (_doubleRow <= 7 && _doubleRow >= 0)) {
       board[_doubleRow][column].isMoveable = board[_doubleRow][column].pawnChees === null;
     }
 }

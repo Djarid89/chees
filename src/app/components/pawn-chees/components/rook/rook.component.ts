@@ -23,6 +23,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
+  @Input() firstMove?: boolean;
   updateAllCanEatableSubs!: Subscription;
   @Input() dead = false;
   tryDefendKing! : Subscription;
@@ -103,6 +104,4 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
   setCheesBoxesCanEat(board: CheesBox[][]) {
     this.setCheesBoxesStatus(board, this.row, this.column, true)
   }
-
-
 }
