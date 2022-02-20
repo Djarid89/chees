@@ -25,6 +25,7 @@ export class KnightComponent extends BasePawnChees implements OnInit, OnDestroy,
   @Input() color!: IPawnTeam | undefined;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
+  @Input() dead = false;
 
   constructor(readonly connector: ConnectorService) {
     super(connector);

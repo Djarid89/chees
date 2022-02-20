@@ -25,6 +25,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() type!: IPawnCheesType | undefined;
   @Input() color: IPawnTeam  | undefined;
   @Input() doubleMove: boolean  | undefined;
+  @Input() dead = false;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
   doResurrect!: Subscription;

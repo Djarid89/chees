@@ -23,6 +23,7 @@ export class BishopComponent extends BasePawnChees implements OnInit, OnDestroy,
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
+  @Input() dead = false;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 

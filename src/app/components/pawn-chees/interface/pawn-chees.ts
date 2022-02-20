@@ -5,14 +5,14 @@ export interface IPawnChees {
   column: number;
   type: IPawnCheesType | undefined;
   color: IPawnTeam | undefined;
+  dead: boolean;
 
   setCheesBoxesStatus: (board: CheesBox[][], row: number, column: number) => void;
   setCheesBoxesCanEat: (board: CheesBox[][], row: number, column: number) => void;
 }
 
 export enum IPawnCheesType {
-  empty = 0,
-  pawn,
+  pawn = 1,
   bishop,
   king,
   knight,

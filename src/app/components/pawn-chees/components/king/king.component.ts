@@ -24,6 +24,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
   updateAllCanEatableSubs!: Subscription;
+  @Input() dead = false;
   tryDefendKing! : Subscription;
 
   constructor(readonly connector: ConnectorService) {
