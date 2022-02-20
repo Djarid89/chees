@@ -1,8 +1,8 @@
 import { Subscription } from "rxjs";
 import { ConnectorService } from "../../../service/connector.service";
-import { ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
+import { IBoardColor, ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
 import { CheesBox } from "../../chees-box/class/chees-box";
-import { IPawnChees, IPawnTeam } from "../interface/pawn-chees";
+import { IPawnChees, IPawnCheesType, IPawnTeam } from "../interface/pawn-chees";
 
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
@@ -38,8 +38,17 @@ export class BasePawnChees {
 
   tryAllPossibleMove(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees): void {
     const isAllCanEatabledSub = this.connector.isAllCanEatabled$.subscribe({
-      next: () => {
-        if(!cheesboard.getKing(cheesBoardColor.color).canBeEatable) {
+      next: (boardColor: IBoardColor) => {
+        const oppositeTeam = cheesboard.getOppositeTeam(boardColor.color);
+        let king = new CheesBox();
+        for(const row of boardColor.board) {
+          for(const cheesBox of row) {
+            if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === oppositeTeam) {
+              king = cheesBox;
+            }
+          }
+        }
+        if(!king.canBeEatable) {
           isAllCanEatabledSub.unsubscribe();
         } else if(this.counter === this.isMoveableOrEatableCheesBox.length - 1) {
           this.connector.kingIsBlock$.next();
@@ -57,10 +66,11 @@ export class BasePawnChees {
     for(const toCheesBox of this.isMoveableOrEatableCheesBox) {
       cheesboard.cloneCheesBoard();
       const fromCheesBox = cheesboard.clonedBoard[pawnChees.row][pawnChees.column];
+      const to = cheesboard.clonedBoard[toCheesBox.row][toCheesBox.column];
       if(toCheesBox.isMoveable) {
-        cheesboard.movePawnChees(fromCheesBox, toCheesBox);
+        cheesboard.movePawnChees(fromCheesBox, to);
       } else {
-        cheesboard.eatPawnChees(fromCheesBox, toCheesBox);
+        cheesboard.eatPawnChees(fromCheesBox, to);
       }
       setTimeout(() => {
         const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
