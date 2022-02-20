@@ -83,7 +83,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
 
     this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
       next: () => {
-        this.connector.showModal$.next({ title: `GAME IS OVER`, text: `Team ${this.cheesboard.getOppositeTeam(this.currentTeam)} win!!!`, cheesBoard: this.cheesboard, height: 200, width: 400 });
+        this.connector.showModal$.next({
+          title: `GAME IS OVER`,
+          text: `Team ${this.cheesboard.getOppositeTeam(this.currentTeam)} win!!!`,
+          cheesBoard: this.cheesboard,
+          height: 200,
+          width: 400
+        });
       }
     });
 
@@ -95,7 +101,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
         const oppositeKing = this.cheesboard.getKing(oppositeTeam);
         if(oppositeKing.canBeEatable) {
-          this.connector.showModal$.next({ title: `KING IS UNDER CHECK`, text: `${oppositeTeam === IPawnTeam.black ? 'Black' : 'White'} king under check`, height: 180, width: 500, ttl: 5000 });
+          this.connector.showModal$.next({
+            title: `KING IS UNDER CHECK`,
+            text: `${oppositeTeam === IPawnTeam.black ? 'Black' : 'White'} king under check`,
+            height: 180,
+            width: 500,
+            ttl: 5000
+          });
           this.kingIsBlockCounter = 0;
           this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
           this.passTurn(oppositeTeam);

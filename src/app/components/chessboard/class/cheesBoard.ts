@@ -60,8 +60,9 @@ export class Cheesboard {
   }
 
   swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
-    const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color);
-    toCheesBox.pawnChees = new PawnChees(fromCheesBox.pawnChees?.type, fromCheesBox.pawnChees?.color);
+    const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, true);
+    const resurrected = Cheesboard.popGraveyard();
+    toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, true);
     fromCheesBox.pawnChees = tempPawnChees;
   }
 
