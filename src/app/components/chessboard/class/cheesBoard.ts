@@ -17,14 +17,14 @@ export class Cheesboard {
   }
 
   initWhiteTeam(): void {
-    this.setPawn(6, IPawnTeam.white);
+    // this.setPawn(6, IPawnTeam.white);
     this.setServant(7, IPawnTeam.white);
     this.board[7][3] = new CheesBox(7, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.white));
     this.board[7][4] = new CheesBox(7, 4, new PawnChees(IPawnCheesType.king, IPawnTeam.white, true));
   }
 
   initBlackTeam(): void {
-    this.setPawn(1, IPawnTeam.black);
+    // this.setPawn(1, IPawnTeam.black);
     this.setServant(0, IPawnTeam.black);
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.king, IPawnTeam.black));
     this.board[0][4] = new CheesBox(0, 4, new PawnChees(IPawnCheesType.queen, IPawnTeam.black, true));
@@ -140,7 +140,7 @@ export class Cheesboard {
       this.clonedBoard[i] = [];
       for(let j = 0; j < 8; j++) {
         const pawnChees = this.board[i][j].pawnChees;
-        this.clonedBoard[i][j] = new CheesBox(i, j, new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.firstMove));
+        this.clonedBoard[i][j] = new CheesBox(i, j, pawnChees ? new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.firstMove) : null);
       }
     }
   }
