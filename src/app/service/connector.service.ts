@@ -20,6 +20,5 @@ export class ConnectorService {
   isOppositeKingCaptured$ = new Subject<void>();
   isAllCanEatabled$ = new Subject<void>();
   showModal$ = new BehaviorSubject<IModalContent | null>(null);
-  resurrect$ = new Subject<PawnChees[]>();
   doResurrect$ = new Subject<IPawnCheesType>();
 }
