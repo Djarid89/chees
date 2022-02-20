@@ -3,6 +3,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from 'src/app/service/connector.service';
 import { IModalContent } from 'src/app/shared/interface/shared';
+import { PawnChees } from '../chees-box/class/chees-box';
+import { Cheesboard } from '../chessboard/class/cheesBoard';
 
 @Component({
   selector: 'modal',
@@ -16,6 +18,8 @@ export class ModalComponent implements OnInit, OnDestroy {
   height!: string;
   ttl!: number | null;
   showButton!: boolean;
+  graveyard!: PawnChees[] | undefined;
+  cheesboard!: Cheesboard | undefined;
 
   ngOnDestroy(): void {
    this.showModalSub.unsubscribe();   
@@ -36,6 +40,8 @@ export class ModalComponent implements OnInit, OnDestroy {
           }, this.ttl)
         }
         this.showButton = content?.showButton || false;
+        this.graveyard = content?.graveyard?.map((pawnchees: PawnChees) => new PawnChees(pawnchees.type, pawnchees.color, pawnchees.doubleMove));
+        this.cheesboard = content?.cheesBoard;
       }
     });
   }
