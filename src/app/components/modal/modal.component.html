@@ -3,7 +3,7 @@
     <h1 *ngIf="content.title">{{content.title}}</h1>
     <p *ngIf="content.text">{{content.text}}</p>
     <read-only-cheesboard *ngIf="content.cheesBoard" [cheesboard]="content.cheesBoard"></read-only-cheesboard>
-    <graveyard *ngIf="content.graveyard" [graveyard]="content.graveyard"></graveyard>
+    <graveyard *ngIf="content.graveyard" [graveyard]="content.graveyard.pawnCheeses"></graveyard>
     <button *ngIf="showButton" (click)="close()">CLOSE</button>
   </div>
 </div>

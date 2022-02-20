@@ -19,6 +19,6 @@ export class ConnectorService {
   isMyKingSafe$ = new Subject<void>();
   isOppositeKingCaptured$ = new Subject<void>();
   isAllCanEatabled$ = new Subject<void>();
-  showModal$ = new BehaviorSubject<IModalContent | null>(null);
+  showModal$ = new BehaviorSubject<IModalContent | undefined>(undefined);
   doResurrect$ = new Subject<IPawnCheesType>();
 }
