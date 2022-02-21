@@ -18,7 +18,7 @@ export class ConnectorService {
   showAvaibleMovement$ = new Subject<IPawnChees>();
   isMyKingSafe$ = new Subject<void>();
   isOppositeKingCaptured$ = new Subject<void>();
-  isAllCanEatabled$ = new Subject<IBoardColor>();
+  isAllCanEatabled$ = new Subject<CheesBox[][]>();
   showModal$ = new BehaviorSubject<IModalContent | undefined>(undefined);
   doResurrect$ = new Subject<IPawnCheesType>();
   resurrect$ = new Subject<IPawnChees>();

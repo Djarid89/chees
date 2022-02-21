@@ -1,6 +1,6 @@
 import { Subscription } from "rxjs";
 import { ConnectorService } from "../../../service/connector.service";
-import { IBoardColor, ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
+import { ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
 import { CheesBox } from "../../chees-box/class/chees-box";
 import { Cheesboard } from "../../chessboard/class/cheesBoard";
 import { IPawnChees, IPawnTeam } from "../interface/pawn-chees";
@@ -38,17 +38,22 @@ export class BasePawnChees {
   }
 
   tryAllPossibleMove(cheesBoardColor: ICheesBoardColor, pawnChees: IPawnChees): void {
+    let counter2 = 0;
+
     const isAllCanEatabledSub = this.connector.isAllCanEatabled$.subscribe({
-      next: (boardColor: IBoardColor) => {
-        const oppositeTeam = cheesboard.getOppositeTeam(boardColor.color);
-        const king = Cheesboard.getKing(boardColor.board, oppositeTeam);
-        if(!king.canBeEatable) {
-          isAllCanEatabledSub.unsubscribe();
-        } else if(this.counter === this.isMoveableOrEatableCheesBox.length - 1) {
-          this.connector.kingIsBlock$.next();
-          isAllCanEatabledSub.unsubscribe();
-        }
+      next: (board: CheesBox[][]) => {
         this.counter++;
+        const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
+        if(this.counter === cheesBoardColor.cheesboard.getNumberPawnChees(oppositeTeam)) {
+          const king = Cheesboard.getKing(board, cheesBoardColor.color);
+          if(king.canBeEatable) {
+            counter2++;
+            if(counter2 === this.isMoveableOrEatableCheesBox.length) {
+              this.connector.kingIsBlock$.next();
+              isAllCanEatabledSub.unsubscribe();
+            }
+          }
+        }
       }
     })
 
@@ -60,8 +65,8 @@ export class BasePawnChees {
       this.connector.kingIsBlock$.next();
       isAllCanEatabledSub.unsubscribe();
     } else {
-      this.counter = 0;
       for(const toCheesBox of this.isMoveableOrEatableCheesBox) {
+        this.counter = 0;
         cheesboard.cloneCheesBoard();
         const fromCheesBox = cheesboard.clonedBoard[pawnChees.row][pawnChees.column];
         const to = cheesboard.clonedBoard[toCheesBox.row][toCheesBox.column];
@@ -70,11 +75,9 @@ export class BasePawnChees {
         } else {
           cheesboard.eatPawnChees(fromCheesBox, to);
         }
-        setTimeout(() => {
-          const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
-          cheesboard.resetCheesBoxCanBeEatable(cheesboard.clonedBoard);
-          this.connector.updateAllCanBeEatable$.next({ board: cheesboard.clonedBoard, color: oppositeTeam, typeOfControl: TypeOfControl.defenderCannotFreeKing });
-        });
+        const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
+        cheesboard.resetCheesBoxCanBeEatable(cheesboard.clonedBoard);
+        this.connector.updateAllCanBeEatable$.next({ board: cheesboard.clonedBoard, color: oppositeTeam, typeOfControl: TypeOfControl.defenderCannotFreeKing });
       }
     }
   }

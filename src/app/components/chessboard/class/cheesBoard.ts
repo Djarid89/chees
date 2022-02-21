@@ -17,14 +17,14 @@ export class Cheesboard {
   }
 
   initWhiteTeam(): void {
-    // this.setPawn(6, IPawnTeam.white);
+    this.setPawn(6, IPawnTeam.white);
     this.setServant(7, IPawnTeam.white);
     this.board[7][3] = new CheesBox(7, 3, new PawnChees(IPawnCheesType.queen, IPawnTeam.white));
     this.board[7][4] = new CheesBox(7, 4, new PawnChees(IPawnCheesType.king, IPawnTeam.white, true));
   }
 
   initBlackTeam(): void {
-    // this.setPawn(1, IPawnTeam.black);
+    this.setPawn(1, IPawnTeam.black);
     this.setServant(0, IPawnTeam.black);
     this.board[0][3] = new CheesBox(0, 3, new PawnChees(IPawnCheesType.king, IPawnTeam.black));
     this.board[0][4] = new CheesBox(0, 4, new PawnChees(IPawnCheesType.queen, IPawnTeam.black, true));
@@ -164,9 +164,9 @@ export class Cheesboard {
   private setServant(row: number, color: IPawnTeam): void {
     this.board[row][0] = new CheesBox(row, 0, new PawnChees(IPawnCheesType.rook, color, true));
     this.board[row][7] = new CheesBox(row, 7, new PawnChees(IPawnCheesType.rook, color, true));
-    // this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
-    // this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
-    // this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
-    // this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
+    this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
+    this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
+    this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
+    this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
   }
 }
