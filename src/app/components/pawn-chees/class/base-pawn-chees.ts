@@ -2,7 +2,8 @@ import { Subscription } from "rxjs";
 import { ConnectorService } from "../../../service/connector.service";
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from "../../../shared/interface/shared";
 import { CheesBox } from "../../chees-box/class/chees-box";
-import { IPawnChees, IPawnCheesType, IPawnTeam } from "../interface/pawn-chees";
+import { Cheesboard } from "../../chessboard/class/cheesBoard";
+import { IPawnChees, IPawnTeam } from "../interface/pawn-chees";
 
 export class BasePawnChees {
   IPawnTeam = IPawnTeam;
@@ -40,14 +41,7 @@ export class BasePawnChees {
     const isAllCanEatabledSub = this.connector.isAllCanEatabled$.subscribe({
       next: (boardColor: IBoardColor) => {
         const oppositeTeam = cheesboard.getOppositeTeam(boardColor.color);
-        let king = new CheesBox();
-        for(const row of boardColor.board) {
-          for(const cheesBox of row) {
-            if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === oppositeTeam) {
-              king = cheesBox;
-            }
-          }
-        }
+        const king = Cheesboard.getKing(boardColor.board, oppositeTeam);
         if(!king.canBeEatable) {
           isAllCanEatabledSub.unsubscribe();
         } else if(this.counter === this.isMoveableOrEatableCheesBox.length - 1) {
@@ -62,21 +56,26 @@ export class BasePawnChees {
     cheesboard.cloneCheesBoard();
     pawnChees.setCheesBoxesStatus(cheesboard.clonedBoard, pawnChees.row, pawnChees.column);
     this.isMoveableOrEatableCheesBox = cheesboard.getIsMoveableOrIsEatable();
-    this.counter = 0;
-    for(const toCheesBox of this.isMoveableOrEatableCheesBox) {
-      cheesboard.cloneCheesBoard();
-      const fromCheesBox = cheesboard.clonedBoard[pawnChees.row][pawnChees.column];
-      const to = cheesboard.clonedBoard[toCheesBox.row][toCheesBox.column];
-      if(toCheesBox.isMoveable) {
-        cheesboard.movePawnChees(fromCheesBox, to);
-      } else {
-        cheesboard.eatPawnChees(fromCheesBox, to);
+    if(!this.isMoveableOrEatableCheesBox) {
+      this.connector.kingIsBlock$.next();
+      isAllCanEatabledSub.unsubscribe();
+    } else {
+      this.counter = 0;
+      for(const toCheesBox of this.isMoveableOrEatableCheesBox) {
+        cheesboard.cloneCheesBoard();
+        const fromCheesBox = cheesboard.clonedBoard[pawnChees.row][pawnChees.column];
+        const to = cheesboard.clonedBoard[toCheesBox.row][toCheesBox.column];
+        if(toCheesBox.isMoveable) {
+          cheesboard.movePawnChees(fromCheesBox, to);
+        } else {
+          cheesboard.eatPawnChees(fromCheesBox, to);
+        }
+        setTimeout(() => {
+          const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
+          cheesboard.resetCheesBoxCanBeEatable(cheesboard.clonedBoard);
+          this.connector.updateAllCanBeEatable$.next({ board: cheesboard.clonedBoard, color: oppositeTeam, typeOfControl: TypeOfControl.defenderCannotFreeKing });
+        });
       }
-      setTimeout(() => {
-        const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
-        cheesboard.resetCheesBoxCanBeEatable(cheesboard.clonedBoard);
-        this.connector.updateAllCanBeEatable$.next({ board: cheesboard.clonedBoard, color: oppositeTeam, typeOfControl: TypeOfControl.defenderCannotFreeKing });
-      });
     }
   }
 }

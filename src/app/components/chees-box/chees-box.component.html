@@ -1,4 +1,4 @@
-<div [ngClass]="cheesBox.isPair() ? 'white' : 'brown'" [class.isMovable]="cheesBox.isMoveable" [class.isEatable]="cheesBox.isEatable">
+<div [ngClass]="cheesBox.isPair() ? 'white' : 'brown'" [class.isMovable]="cheesBox.isMoveable" [class.isEatable]="cheesBox.isEatable" [class.isEatable2]="cheesBox.canBeEatable">
   <pawn-chees [cheesBox]="cheesBox">
     <ng-container *ngIf="cheesBox.pawnChees">
       <ng-container [ngSwitch]="cheesBox.pawnChees.type">

@@ -82,13 +82,12 @@ export class Cheesboard {
   }
 
   static popGraveyard(): PawnChees | undefined {
-    const pawnChees = this.graveyard?.pop();
-    return pawnChees;
+    return this.graveyard?.pop();
   }
 
-  getKing(color: IPawnTeam): CheesBox {
+  static getKing(board: CheesBox[][], color: IPawnTeam): CheesBox {
     let king = new CheesBox();
-    for(const row of this.board) {
+    for(const row of board) {
       for(const cheesBox of row) {
         if(cheesBox.pawnChees?.type === IPawnCheesType.king && cheesBox.pawnChees?.color === color) {
           king = cheesBox;
@@ -141,6 +140,7 @@ export class Cheesboard {
       for(let j = 0; j < 8; j++) {
         const pawnChees = this.board[i][j].pawnChees;
         this.clonedBoard[i][j] = new CheesBox(i, j, pawnChees ? new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.firstMove) : null);
+        this.clonedBoard[i][j].canBeEatable = this.board[i][j].canBeEatable;
       }
     }
   }

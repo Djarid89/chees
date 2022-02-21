@@ -9,17 +9,13 @@ import { IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
   templateUrl: './graveyard.component.html',
   styleUrls: ['./graveyard.component.scss']
 })
-export class GraveyardComponent implements OnInit {
-  @Input() pawnCheeses!: PawnChees[] | undefined;
+export class GraveyardComponent {
+  @Input() pawnCheesesToResurrect!: PawnChees[] | undefined;
   @Output() close = new EventEmitter();
   IPawnCheesType = IPawnCheesType;
   resurrectionSub!: Subscription;
 
   constructor(private readonly connector: ConnectorService) { }
-
-  ngOnInit(): void {
-    const paw = this.pawnCheeses;
-  }
 
   resurrection(pawnChees: PawnChees): void {
     this.connector.doResurrect$.next(pawnChees.type);

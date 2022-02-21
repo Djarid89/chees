@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
-import { Action, IFromToCheesBox, IModalContent, TypeOfControl } from '../../shared/interface/shared';
-import { CheesBox, PawnChees } from '../chees-box/class/chees-box';
+import { Action, IFromToCheesBox, TypeOfControl } from '../../shared/interface/shared';
+import { CheesBox } from '../chees-box/class/chees-box';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
@@ -99,7 +99,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           return;
         }
         const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
-        const oppositeKing = this.cheesboard.getKing(oppositeTeam);
+        const oppositeKing = Cheesboard.getKing(this.cheesboard.board, oppositeTeam);
         if(oppositeKing.canBeEatable) {
           this.connector.showModal$.next({
             title: `KING IS UNDER CHECK`,
@@ -108,9 +108,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
             width: 500,
             ttl: 3000
           });
-          this.kingIsBlockCounter = 0;
-          this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
-          this.passTurn(oppositeTeam);
+          this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
+          this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam, typeOfControl: TypeOfControl.opponentKingIsCaptured })
+          setTimeout(() => {
+            this.kingIsBlockCounter = 0;
+            this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+            this.passTurn(oppositeTeam);
+          });
         } else {
           this.passTurn(oppositeTeam);
         }
@@ -123,7 +127,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         if(!this.allPawnCheesHasEmitted(oppositeTeam)) {
           return;
         }
-        const myKing = this.cheesboard.getKing(this.currentTeam);
+        const myKing = Cheesboard.getKing(this.cheesboard.board, this.currentTeam);
         if(myKing.canBeEatable) {
           this.connector.showModal$.next({ title: `UNDO MOVE`, text: `Your move discovered the king`, height: 200, width: 400, ttl: 3000 });
           if(this.fromToCheesBox.action === Action.move) {
@@ -168,7 +172,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
       } else if(to.column > from.column && to.column - from.column === 2) {
         const fromRookCheesBox = this.cheesboard.getRook(this.currentTeam, 7);
-        const toTower = this.cheesboard.board[from.row][from.column + 1]; 
+        const toTower = this.cheesboard.board[from.row][from.column + 1];
         this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
       }
     }
