@@ -66,7 +66,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     let _row = row + 1;
     while(_row <= 7) {
       this.setCheesBoxStatus(board[_row][column], this.color, canBeEatable);
-      if(board[_row][column].pawnChees?.type !== undefined) {
+      if(board[_row][column].pawnChees !== null) {
         break;
       } else {
         _row++;
@@ -75,7 +75,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     _row = row - 1;
     while(_row >= 0) {
       this.setCheesBoxStatus(board[_row][column], this.color, canBeEatable);
-      if(board[_row][column].pawnChees?.type !== undefined) {
+      if(board[_row][column].pawnChees !== null) {
         break;
       } else {
         _row--;
@@ -84,7 +84,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     let _column = column + 1;
     while(_column <= 7) {
       this.setCheesBoxStatus(board[row][_column], this.color, canBeEatable);
-      if(board[row][_column].pawnChees?.type !== undefined) {
+      if(board[row][_column].pawnChees !== null) {
         break;
       } else {
         _column++;
@@ -93,7 +93,7 @@ export class RookComponent extends BasePawnChees implements OnInit, OnDestroy, I
     _column = column - 1;
     while(_column >= 0) {
       this.setCheesBoxStatus(board[row][_column], this.color, canBeEatable);
-      if(board[row][_column].pawnChees?.type !== undefined) {
+      if(board[row][_column].pawnChees !== null) {
         break;
       } else {
         _column--;

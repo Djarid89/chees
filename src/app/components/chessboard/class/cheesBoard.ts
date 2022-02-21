@@ -164,9 +164,9 @@ export class Cheesboard {
   private setServant(row: number, color: IPawnTeam): void {
     this.board[row][0] = new CheesBox(row, 0, new PawnChees(IPawnCheesType.rook, color, true));
     this.board[row][7] = new CheesBox(row, 7, new PawnChees(IPawnCheesType.rook, color, true));
-    this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
-    this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
-    this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
-    this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
+    // this.board[row][1] = new CheesBox(row, 1, new PawnChees(IPawnCheesType.knight, color));
+    // this.board[row][6] = new CheesBox(row, 6, new PawnChees(IPawnCheesType.knight, color));
+    // this.board[row][2] = new CheesBox(row, 2, new PawnChees(IPawnCheesType.bishop, color));
+    // this.board[row][5] = new CheesBox(row, 5, new PawnChees(IPawnCheesType.bishop, color));
   }
 }

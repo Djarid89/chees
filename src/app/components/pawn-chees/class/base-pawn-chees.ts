@@ -56,7 +56,7 @@ export class BasePawnChees {
     cheesboard.cloneCheesBoard();
     pawnChees.setCheesBoxesStatus(cheesboard.clonedBoard, pawnChees.row, pawnChees.column);
     this.isMoveableOrEatableCheesBox = cheesboard.getIsMoveableOrIsEatable();
-    if(!this.isMoveableOrEatableCheesBox) {
+    if(!this.isMoveableOrEatableCheesBox.length) {
       this.connector.kingIsBlock$.next();
       isAllCanEatabledSub.unsubscribe();
     } else {
