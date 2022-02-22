@@ -14,6 +14,9 @@ import { BishopComponent } from './components/pawn-chees/components/bishop/bisho
 import { RookComponent } from './components/pawn-chees/components/rook/rook.component';
 import { QueenComponent } from './components/pawn-chees/components/queen/queen.component';
 import { KingComponent } from './components/pawn-chees/components/king/king.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { ReadOnlyCheesboardComponent } from './components/read-only-cheesboard/read-only-cheesboard.component';
+import { GraveyardComponent } from './components/graveyard/graveyard.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,10 @@ import { KingComponent } from './components/pawn-chees/components/king/king.comp
     BishopComponent,
     RookComponent,
     QueenComponent,
-    KingComponent
+    KingComponent,
+    ModalComponent,
+    ReadOnlyCheesboardComponent,
+    GraveyardComponent
   ],
   imports: [
     BrowserModule,

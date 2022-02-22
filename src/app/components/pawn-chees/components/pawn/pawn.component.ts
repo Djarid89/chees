@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
 import { CheesBox } from '../../../chees-box/class/chees-box';
@@ -23,9 +24,11 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined;
   @Input() color: IPawnTeam  | undefined;
-  @Input() doubleMove: boolean  | undefined;
+  @Input() firstMove?: boolean;
+  @Input() dead = false;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
+  doResurrect!: Subscription;
 
   constructor(readonly connector: ConnectorService) {
     super(connector);
@@ -34,9 +37,27 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   ngOnDestroy(): void {
     this.updateAllCanEatableSubs.unsubscribe();
     this.tryDefendKing.unsubscribe();
+    if(this.doResurrect) {
+      this.doResurrect.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
+    if((this.color === IPawnTeam.white && this.row === 0) || (this.color === IPawnTeam.black && this.row === 7)) {
+      this.connector.showModal$.next({
+        title: `RESURRECT CHEES PAWN`,
+        text: `Choose a chees pawn to resurrect`,
+        graveyard: { pawnCheeses: Cheesboard.graveyard, color: this.color },
+        height: 300,
+        width: 700
+      });
+      this.doResurrect = this.connector.doResurrect$.subscribe({
+        next: (type: IPawnCheesType) => {
+          this.type = type
+          this.connector.resurrect$.next(this);
+        }
+      });
+    }
     this.updateAllCanEatableSubs = this.connector.updateAllCanBeEatable$.subscribe({
       next: (data: IBoardColor) => {
         if(data.color === this.color) {
@@ -47,7 +68,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
           } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
             this.connector.isOppositeKingCaptured$.next();
           } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
-            this.connector.isAllCanEatabled$.next();
+            this.connector.isAllCanEatabled$.next(data.board);
           }
         }
       }
@@ -73,7 +94,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
         board[_row][column - 1].isEatable = this.isOppositeColor(board[_row][column - 1], this.color);
       }
     }
-    if(this.doubleMove && (_doubleRow <= 7 && _doubleRow >= 0)) {
+    if(this.firstMove && (_doubleRow <= 7 && _doubleRow >= 0)) {
       board[_doubleRow][column].isMoveable = board[_doubleRow][column].pawnChees === null;
     }
 }

@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectorService } from '../../service/connector.service';
 import { Action, IFromToCheesBox, TypeOfControl } from '../../shared/interface/shared';
-import { IPawnChees, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
+import { CheesBox } from '../chees-box/class/chees-box';
+import { IPawnChees, IPawnCheesType, IPawnTeam } from '../pawn-chees/interface/pawn-chees';
 import { Cheesboard } from './class/cheesBoard';
 
 @Component({
@@ -15,7 +16,6 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   number = ['8','7','6','5','4','3','2','1'];
   letter = ['A','B','C','D','E','F','G','H'];
   currentTeam = IPawnTeam.white;
-  winningTeam: IPawnTeam | undefined;
   kingIsBlockCounter!: number;
   counter!: number;
 
@@ -26,6 +26,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
   showAvaibleMovement!: Subscription;
   isMyKingSafeSub!: Subscription;
   isOppositeKingCapturedSub!: Subscription;
+  resurrectSub!: Subscription;
   fromToCheesBox!: IFromToCheesBox;
 
   constructor(private readonly connector: ConnectorService) { }
@@ -38,6 +39,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.showAvaibleMovement.unsubscribe();
     this.isMyKingSafeSub.unsubscribe();
     this.isOppositeKingCapturedSub.unsubscribe();
+    this.resurrectSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -47,6 +49,15 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });
+    });
+
+    this.resurrectSub = this.connector.resurrect$.subscribe({
+      next: (pawnChees: IPawnChees) => {
+        const cheesBox = this.cheesboard.board[pawnChees.row][pawnChees.column];
+        if(cheesBox && cheesBox.pawnChees) {
+          cheesBox.pawnChees.type = pawnChees.type;
+        }
+      }
     });
 
     this.showAvaibleMovement = this.connector.showAvaibleMovement$.subscribe({
@@ -63,15 +74,24 @@ export class ChessboardComponent implements OnInit, OnDestroy {
 
     this.kingIsBlockSub = this.connector.kingIsBlock$.subscribe({
       next: () => {
+        const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
         this.kingIsBlockCounter++;
-        if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(this.currentTeam)) {
+        if(this.kingIsBlockCounter === this.cheesboard.getNumberPawnChees(oppositeTeam)) {
           this.connector.gameIsOver$.next();
         }
       }
     });
 
     this.gameIsOverSub = this.connector.gameIsOver$.subscribe({
-      next: () => this.winningTeam = this.cheesboard.getOppositeTeam(this.currentTeam)
+      next: () => {
+        this.connector.showModal$.next({
+          title: `GAME IS OVER`,
+          text: `Team ${this.cheesboard.getOppositeTeam(this.currentTeam)} win!!!`,
+          cheesBoard: this.cheesboard,
+          height: 200,
+          width: 400
+        });
+      }
     });
 
     this.isOppositeKingCapturedSub = this.connector.isOppositeKingCaptured$.subscribe({
@@ -80,12 +100,22 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           return;
         }
         const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
-        const oppositeKing = this.cheesboard.getKing(oppositeTeam);
+        const oppositeKing = Cheesboard.getKing(this.cheesboard.board, oppositeTeam);
         if(oppositeKing.canBeEatable) {
-          alert(`${oppositeTeam === IPawnTeam.black ? 'black' : 'white'} king under check`);
-          this.kingIsBlockCounter = 0;
-          this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
-          this.passTurn(oppositeTeam);
+          this.connector.showModal$.next({
+            title: `KING IS UNDER CHECK`,
+            text: `${oppositeTeam === IPawnTeam.black ? 'Black' : 'White'} king under check`,
+            height: 180,
+            width: 500,
+            ttl: 3000
+          });
+          this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
+          this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.currentTeam, typeOfControl: TypeOfControl.opponentKingIsCaptured })
+          setTimeout(() => {
+            this.kingIsBlockCounter = 0;
+            this.connector.tryDefendKing$.next({ cheesboard: this.cheesboard, color: oppositeTeam });
+            this.passTurn(oppositeTeam);
+          });
         } else {
           this.passTurn(oppositeTeam);
         }
@@ -98,13 +128,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         if(!this.allPawnCheesHasEmitted(oppositeTeam)) {
           return;
         }
-        const myKing = this.cheesboard.getKing(this.currentTeam);
+        const myKing = Cheesboard.getKing(this.cheesboard.board, this.currentTeam);
         if(myKing.canBeEatable) {
-          alert('Your move discovered the king');
+          this.connector.showModal$.next({ title: `UNDO MOVE`, text: `Your move discovered the king`, height: 200, width: 400, ttl: 3000 });
           if(this.fromToCheesBox.action === Action.move) {
             this.cheesboard.movePawnChees(this.fromToCheesBox.toCheesBox, this.fromToCheesBox.fromCheesBox);
           } else {
-            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox, true);
+            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox);
           }
         } else {
           this.counter = 0;
@@ -117,10 +147,13 @@ export class ChessboardComponent implements OnInit, OnDestroy {
     this.movePawnCheesSub = this.connector.movePawnChees$.subscribe({
       next: (fromToCheesBox: IFromToCheesBox) => {
         this.fromToCheesBox = fromToCheesBox;
+        const from = fromToCheesBox.fromCheesBox;
+        const to = fromToCheesBox.toCheesBox;
         if(fromToCheesBox.action === Action.move) {
-          this.cheesboard.movePawnChees(fromToCheesBox.fromCheesBox, fromToCheesBox.toCheesBox);
+          this.cheesboard.movePawnChees(from, to);
+          this.tryCastling(from, to);
         } else {
-          this.cheesboard.eatPawnChees(fromToCheesBox.fromCheesBox, fromToCheesBox.toCheesBox);
+          this.cheesboard.eatPawnChees(from, to);
         }
         setTimeout(() => {
           const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);
@@ -130,6 +163,20 @@ export class ChessboardComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  private tryCastling(from: CheesBox, to: CheesBox) {
+    if(to.pawnChees?.type === IPawnCheesType.king) {
+      if(from.column > to.column && from.column - to.column === 2) {
+        const fromRookCheesBox = this.cheesboard.getRook(this.currentTeam, 0);
+        const toTower = this.cheesboard.board[from.row][from.column - 1];
+        this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
+      } else if(to.column > from.column && to.column - from.column === 2) {
+        const fromRookCheesBox = this.cheesboard.getRook(this.currentTeam, 7);
+        const toTower = this.cheesboard.board[from.row][from.column + 1];
+        this.cheesboard.movePawnChees(fromRookCheesBox, toTower);
+      }
+    }
   }
 
   private passTurn(oppositeTeam: IPawnTeam): void {

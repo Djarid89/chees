@@ -1,1 +1,1 @@
-<img alt="" [class.white]="color === IPawnTeam.white" [src]="'../../../../../assets/rook.png'">
+<img alt="" [class.white]="color === IPawnTeam.white && !dead" [class.dead]="dead" [src]="'../../../../../assets/rook.png'">

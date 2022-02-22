@@ -18,6 +18,10 @@ img {
   filter: invert(1);
 }
 
+.dead {
+  filter: opacity(0.2);
+}
+
 img {
   width: 40%;
   height: 40%;

@@ -23,6 +23,8 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
   @Input() column!: number;
   @Input() type!: IPawnCheesType | undefined
   @Input() color!: IPawnTeam | undefined;
+  @Input() dead = false;
+  @Input() firstMove?: boolean;
   updateAllCanEatableSubs!: Subscription;
   tryDefendKing! : Subscription;
 
@@ -46,7 +48,7 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
           } else if(data.typeOfControl === TypeOfControl.opponentKingIsCaptured) {
             this.connector.isOppositeKingCaptured$.next();
           } else if(data.typeOfControl === TypeOfControl.defenderCannotFreeKing) {
-            this.connector.isAllCanEatabled$.next();
+            this.connector.isAllCanEatabled$.next(data.board);
           }
         }
       }
@@ -85,6 +87,50 @@ export class KingComponent extends BasePawnChees implements OnInit, OnDestroy, I
     if(row + 1 <= 7) {
       this.setCheesBoxStatus(board[row + 1][column], this.color, canBeEatable, true);
     }
+    if(this.firstMove && !board[this.row][this.column].isEatable) {
+      const towerCheesBox = this.canLeftCastling(board);
+      towerCheesBox.forEach((tower: CheesBox) => {
+        if(tower.column === 0) {
+          if(this.column - 2 >= 0) {
+            this.setCheesBoxStatus(board[this.row][this.column - 2], this.color, canBeEatable, true);
+          }
+        } else {
+          if(this.column + 2 <= 7) {
+            this.setCheesBoxStatus(board[this.row][this.column + 2], this.color, canBeEatable, true);
+          }
+        }
+      });
+    }
+  }
+
+  canLeftCastling(board: CheesBox[][]): CheesBox[] {
+    const result = [];
+    let _column = this.column - 1;
+    while(_column >= 0) {
+      const pawnChees = board[this.row][_column].pawnChees;
+      if(pawnChees !== null) {
+        if(pawnChees.color === this.color && pawnChees.type === IPawnCheesType.rook && pawnChees.firstMove) {
+          result.push(board[this.row][_column]);
+        } else {
+          break;
+        }
+      }
+      _column--;
+    }
+    _column = this.column + 1;
+    while(_column <= 7) {
+      const pawnChees = board[this.row][_column].pawnChees;
+      if(pawnChees !== null) {
+        if(pawnChees.color === this.color && pawnChees.type === IPawnCheesType.rook && pawnChees.firstMove) {
+          result.push(board[this.row][_column]);
+        } else {
+          break;
+        }
+      }
+      _column++;
+    }
+
+    return result;
   }
 
   setCheesBoxesCanEat(board: CheesBox[][]) {

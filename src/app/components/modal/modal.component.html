@@ -1,0 +1,9 @@
+<div class="modal" *ngIf="content">
+  <div class="content" [ngStyle]="{'width': width, 'height': height}">
+    <h1 *ngIf="content.title">{{content.title}}</h1>
+    <p *ngIf="content.text">{{content.text}}</p>
+    <!-- <read-only-cheesboard *ngIf="content.cheesBoard" [cheesboard]="content.cheesBoard"></read-only-cheesboard> -->
+    <graveyard (close)="close()" *ngIf="content.graveyard" [pawnCheesesToResurrect]="pawnCheesesToResurrect"></graveyard>
+    <button *ngIf="showButton" (click)="close()">CLOSE</button>
+  </div>
+</div>
