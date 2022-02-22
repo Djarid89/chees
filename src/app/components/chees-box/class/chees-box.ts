@@ -27,9 +27,9 @@ export class PawnChees {
   color: IPawnTeam | undefined;
   firstMove: boolean;
 
-  constructor(type?: IPawnCheesType, color?: IPawnTeam, doubleMove = true) {
+  constructor(type?: IPawnCheesType, color?: IPawnTeam, firstMove = true) {
     this.type = type || undefined;
     this.color = color || undefined;
-    this.firstMove = doubleMove;
+    this.firstMove = firstMove;
   }
 }
