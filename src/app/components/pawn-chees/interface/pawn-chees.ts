@@ -1,4 +1,4 @@
-import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
+import { CheesBox } from "../../chees-box/class/chees-box";
 
 export interface IPawnChees {
   row: number;

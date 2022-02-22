@@ -20,6 +20,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   showButton!: boolean;
   pawnCheesesToResurrect!: PawnChees[] | undefined;
   cheesboard!: Cheesboard | undefined;
+  timeout: any;
 
   ngOnDestroy(): void {
    this.showModalSub.unsubscribe();
@@ -35,8 +36,8 @@ export class ModalComponent implements OnInit, OnDestroy {
           this.width = content?.width ? `${content?.width}px` : '0';
           this.height = content?.height ? `${content?.height}px` : '0';
           this.ttl = content?.ttl || null;
-          if(this.ttl) {
-            setTimeout(() => {
+          if(this.ttl && !this.timeout) {
+            this.timeout = setTimeout(() => {
               this.content = undefined;
             }, this.ttl)
           }
