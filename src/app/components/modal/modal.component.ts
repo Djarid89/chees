@@ -35,7 +35,7 @@ export class ModalComponent implements OnInit, OnDestroy {
           this.width = content?.width ? `${content?.width}px` : '0';
           this.height = content?.height ? `${content?.height}px` : '0';
           this.ttl = content?.ttl || null;
-          if(this.ttl !== null) {
+          if(this.ttl) {
             setTimeout(() => {
               this.content = undefined;
             }, this.ttl)
