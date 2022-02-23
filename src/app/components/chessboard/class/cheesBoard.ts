@@ -59,6 +59,7 @@ export class Cheesboard {
   swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
     const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, false);
     const resurrected = Cheesboard.popGraveyard();
+    Cheesboard.removeGraveyard(resurrected as PawnChees);
     toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, false);
     fromCheesBox.pawnChees = tempPawnChees;
   }
@@ -67,15 +68,19 @@ export class Cheesboard {
     if(!eaterCheesBox.pawnChees) {
       return;
     }
-    if(eatenCheesBox.pawnChees) {
-      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, false));
+    if(eatenCheesBox.pawnChees && eatenCheesBox.pawnChees.type !== IPawnCheesType.pawn) {
+      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, eatenCheesBox.pawnChees?.firstMove));
     }
-    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, false);
+    eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, eatenCheesBox.pawnChees?.firstMove);
     eaterCheesBox.pawnChees = null;
   }
 
   static pushGraveyard(pawnChees: PawnChees) {
     this.graveyard.push(pawnChees);
+  }
+
+  static removeGraveyard(pawnChees: PawnChees) {
+    this.graveyard = this.graveyard.filter((pawn: PawnChees) => pawn.type !== pawnChees.type && pawn.color !== pawnChees.color);
   }
 
   static popGraveyard(): PawnChees | undefined {
@@ -138,16 +143,6 @@ export class Cheesboard {
         const pawnChees = this.board[i][j].pawnChees;
         this.clonedBoard[i][j] = new CheesBox(i, j, pawnChees ? new PawnChees(pawnChees?.type, pawnChees?.color, pawnChees?.firstMove) : null);
         this.clonedBoard[i][j].canBeEatable = this.board[i][j].canBeEatable;
-      }
-    }
-  }
-
-  removePawnCheesIsEatable(): void {
-    for(let i = 0; i < 8; i++) {
-      for(let j = 0; j < 8; j++) {
-        if(this.board[i][j].isEatable) {
-          this.board[i][j].pawnChees = null;
-        }
       }
     }
   }

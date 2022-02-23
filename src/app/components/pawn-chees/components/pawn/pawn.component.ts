@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Cheesboard } from 'src/app/components/chessboard/class/cheesBoard';
 import { ConnectorService } from '../../../../service/connector.service';
 import { IBoardColor, ICheesBoardColor, TypeOfControl } from '../../../../shared/interface/shared';
-import { CheesBox } from '../../../chees-box/class/chees-box';
+import { CheesBox, PawnChees } from '../../../chees-box/class/chees-box';
 import { BasePawnChees } from '../../class/base-pawn-chees';
 import { IPawnChees, IPawnCheesType, IPawnTeam } from '../../interface/pawn-chees';
 import { PAWN_CHEES } from '../pawn-chees.token';
@@ -47,7 +47,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
       this.connector.showModal$.next({
         title: `RESURRECT CHEES PAWN`,
         text: `Choose a chees pawn to resurrect`,
-        graveyard: { pawnCheeses: Cheesboard.graveyard, color: this.color },
+        pawnCheesesToResurrect: Cheesboard.graveyard.filter((pawnChees: PawnChees) => pawnChees.color === this.color),
         height: 300,
         width: 700
       });

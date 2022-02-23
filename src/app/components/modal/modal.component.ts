@@ -4,7 +4,6 @@ import { ConnectorService } from 'src/app/service/connector.service';
 import { IModalContent } from 'src/app/shared/interface/shared';
 import { PawnChees } from '../chees-box/class/chees-box';
 import { Cheesboard } from '../chessboard/class/cheesBoard';
-import { IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
 
 @Component({
   selector: 'modal',
@@ -39,12 +38,11 @@ export class ModalComponent implements OnInit, OnDestroy {
           if(this.ttl && !this.timeout) {
             this.timeout = setTimeout(() => {
               this.content = undefined;
+              this.timeout = null;
             }, this.ttl)
-            this.timeout = null;
           }
           this.showButton = content?.showButton || false;
-          this.pawnCheesesToResurrect = content?.graveyard?.pawnCheeses.filter((pawn: PawnChees) => pawn.type !== IPawnCheesType.pawn && pawn.color === content.graveyard?.color)
-            .map((pawnchees: PawnChees) => new PawnChees(pawnchees.type, pawnchees.color, pawnchees.firstMove));
+          this.pawnCheesesToResurrect = (content?.pawnCheesesToResurrect || []).map((pawn: PawnChees) => new PawnChees(pawn.type, pawn.color, pawn.firstMove));
           this.cheesboard = content?.cheesBoard;
         })
       }

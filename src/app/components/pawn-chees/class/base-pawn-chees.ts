@@ -16,17 +16,17 @@ export class BasePawnChees {
       cheesBox.canBeEatable = true;
     } else {
       if(isKing) {
-        cheesBox.isMoveable = !cheesBox.pawnChees?.type && !cheesBox.canBeEatable;
+        cheesBox.isMoveable = cheesBox.pawnChees === null && !cheesBox.canBeEatable;
         cheesBox.isEatable = this.isOppositeColor(cheesBox, color) && !cheesBox.canBeEatable;
       } else {
-        cheesBox.isMoveable = !cheesBox.pawnChees?.type;
+        cheesBox.isMoveable = cheesBox.pawnChees === null;
         cheesBox.isEatable = this.isOppositeColor(cheesBox, color);
       }
     }
   }
 
   isOppositeColor(cheesBox: CheesBox, color: IPawnTeam | undefined): boolean {
-    if(!cheesBox.pawnChees?.type) {
+    if(cheesBox.pawnChees === null) {
       return false;
     } else {
       return cheesBox.pawnChees.color !== color;

@@ -33,12 +33,7 @@ export interface IModalContent {
    cheesBoard?: Cheesboard;
    winningTeam?: IPawnTeam;
    showButton?: boolean;
-   graveyard?: IGraveyard;
-}
-
-export interface IGraveyard {
-  pawnCheeses: PawnChees[];
-  color: IPawnTeam;
+   pawnCheesesToResurrect?: PawnChees[];
 }
 
 export enum Action {
