@@ -44,8 +44,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cheesboard = new Cheesboard();
-    this.cheesboard.initBlackTeam();
-    this.cheesboard.initWhiteTeam();
+    this.cheesboard.initTeams();
     setTimeout(() => {
       this.cheesboard.resetCheesBoxCanBeEatable(this.cheesboard.board);
       this.connector.updateAllCanBeEatable$.next({ board: this.cheesboard.board, color: this.cheesboard.getOppositeTeam(this.currentTeam) });

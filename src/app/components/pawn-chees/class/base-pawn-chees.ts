@@ -46,11 +46,12 @@ export class BasePawnChees {
           const king = Cheesboard.getKing(board, cheesBoardColor.color);
           if(!king.canBeEatable) {
             isAllCanEatabledSub.unsubscribe();
-          }
-          numberOfAvaibleMovementTry++;
-          if(numberOfAvaibleMovementTry === avaibleMovement.length) {
-            this.connector.kingIsBlock$.next();
-            isAllCanEatabledSub.unsubscribe();
+          } else {
+            numberOfAvaibleMovementTry++;
+            if(numberOfAvaibleMovementTry === avaibleMovement.length) {
+              this.connector.kingIsBlock$.next();
+              isAllCanEatabledSub.unsubscribe();
+            }
           }
         }
       }

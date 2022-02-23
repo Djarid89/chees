@@ -40,6 +40,7 @@ export class ModalComponent implements OnInit, OnDestroy {
             this.timeout = setTimeout(() => {
               this.content = undefined;
             }, this.ttl)
+            this.timeout = null;
           }
           this.showButton = content?.showButton || false;
           this.pawnCheesesToResurrect = content?.graveyard?.pawnCheeses.filter((pawn: PawnChees) => pawn.type !== IPawnCheesType.pawn && pawn.color === content.graveyard?.color)
