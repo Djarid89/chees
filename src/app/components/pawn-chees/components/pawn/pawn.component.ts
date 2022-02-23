@@ -43,7 +43,7 @@ export class PawnComponent extends BasePawnChees implements OnInit, OnDestroy, I
   }
 
   ngOnInit(): void {
-    if((this.color === IPawnTeam.white && this.row === 0) || (this.color === IPawnTeam.black && this.row === 7)) {
+    if((this.color === IPawnTeam.white && this.row === 0) || (this.color === IPawnTeam.black && this.row === 7) && Cheesboard.graveyard?.length) {
       this.connector.showModal$.next({
         title: `RESURRECT CHEES PAWN`,
         text: `Choose a chees pawn to resurrect`,
