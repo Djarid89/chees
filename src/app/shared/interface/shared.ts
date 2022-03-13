@@ -24,6 +24,11 @@ export interface IFromToCheesBox {
   action: Action;
 }
 
+export interface IUpgradeGraveyard {
+  pawnChees: PawnChees,
+  action: GraveyardAction
+}
+
 export interface IModalContent {
    title?: string;
    text?: string;
@@ -33,7 +38,12 @@ export interface IModalContent {
    cheesBoard?: Cheesboard;
    winningTeam?: IPawnTeam;
    showButton?: boolean;
-   pawnCheesesToResurrect?: PawnChees[];
+   showGraveyard?: IShowGraveyard;
+}
+
+export interface IShowGraveyard {
+  show?: boolean;
+  team?: IPawnTeam;
 }
 
 export enum Action {
@@ -45,4 +55,9 @@ export enum TypeOfControl {
   kingIsSafe = 1,
   opponentKingIsCaptured,
   defenderCannotFreeKing
+}
+
+export enum GraveyardAction {
+  push = 1,
+  pop
 }

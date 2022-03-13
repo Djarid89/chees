@@ -1,4 +1,4 @@
-<div class="container" (click)="resurrection(pawnChees)" *ngFor="let pawnChees of pawnCheesesToResurrect">
+<div class="container" (click)="resurrection(pawnChees)" *ngFor="let pawnChees of graveyard">
   <ng-container [ngSwitch]="pawnChees.type">
     <pawn [dead]="true" *ngSwitchCase="IPawnCheesType.pawn"></pawn>
     <bishop [dead]="true" *ngSwitchCase="IPawnCheesType.bishop"></bishop>

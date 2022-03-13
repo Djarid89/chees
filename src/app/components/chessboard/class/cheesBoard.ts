@@ -1,10 +1,13 @@
+import { ConnectorService } from "src/app/service/connector.service";
+import { GraveyardAction, IUpgradeGraveyard } from "src/app/shared/interface/shared";
 import { CheesBox, PawnChees } from "../../chees-box/class/chees-box";
 import { IPawnCheesType, IPawnTeam } from "../../pawn-chees/interface/pawn-chees";
 
 export class Cheesboard {
   board!: CheesBox[][];
   clonedBoard!: CheesBox[][];
-  static graveyard: PawnChees[] = [];
+
+  private toResurrect?: PawnChees;
 
   constructor() {
     this.board = [];
@@ -56,35 +59,27 @@ export class Cheesboard {
     fromCheesBox.pawnChees = null;
   }
 
-  swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox): void {
+  swapPawnChees(fromCheesBox: CheesBox, toCheesBox: CheesBox, connectorService: ConnectorService): void {
     const tempPawnChees = new PawnChees(toCheesBox.pawnChees?.type, toCheesBox.pawnChees?.color, false);
-    const resurrected = Cheesboard.popGraveyard();
-    Cheesboard.removeGraveyard(resurrected as PawnChees);
-    toCheesBox.pawnChees = new PawnChees(resurrected?.type, resurrected?.color, false);
+    connectorService.updateGraveyard$.next({ pawnChees: new PawnChees(), action: GraveyardAction.pop });
+    toCheesBox.pawnChees = new PawnChees(this.toResurrect?.type, this.toResurrect?.color, false);
     fromCheesBox.pawnChees = tempPawnChees;
   }
 
-  eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox): void {
+  eatPawnChees(eaterCheesBox: CheesBox, eatenCheesBox: CheesBox, connectorService: ConnectorService): void {
     if(!eaterCheesBox.pawnChees) {
       return;
     }
     if(eatenCheesBox.pawnChees && eatenCheesBox.pawnChees.type !== IPawnCheesType.pawn) {
-      Cheesboard.pushGraveyard(new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, eatenCheesBox.pawnChees?.firstMove));
+      const param: IUpgradeGraveyard = {
+        pawnChees: new PawnChees(eatenCheesBox.pawnChees?.type, eatenCheesBox.pawnChees?.color, eatenCheesBox.pawnChees?.firstMove),
+        action: GraveyardAction.push
+      }
+      connectorService.updateGraveyard$.next(param);
     }
     eatenCheesBox.pawnChees = new PawnChees(eaterCheesBox.pawnChees.type, eaterCheesBox.pawnChees.color, eatenCheesBox.pawnChees?.firstMove);
+    this.toResurrect = new PawnChees(eatenCheesBox.pawnChees.type, eatenCheesBox.pawnChees.color, eatenCheesBox.pawnChees?.firstMove);
     eaterCheesBox.pawnChees = null;
-  }
-
-  static pushGraveyard(pawnChees: PawnChees) {
-    this.graveyard.push(pawnChees);
-  }
-
-  static removeGraveyard(pawnChees: PawnChees) {
-    this.graveyard = this.graveyard.filter((pawn: PawnChees) => pawn.type !== pawnChees.type && pawn.color !== pawnChees.color);
-  }
-
-  static popGraveyard(): PawnChees | undefined {
-    return this.graveyard?.pop();
   }
 
   static getKing(board: CheesBox[][], color: IPawnTeam): CheesBox {

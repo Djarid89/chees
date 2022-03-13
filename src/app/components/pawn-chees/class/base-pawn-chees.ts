@@ -73,7 +73,7 @@ export class BasePawnChees {
         if(toCheesBox.isMoveable) {
           cheesboard.movePawnChees(fromCheesBox, to);
         } else {
-          cheesboard.eatPawnChees(fromCheesBox, to);
+          cheesboard.eatPawnChees(fromCheesBox, to, this.connector);
         }
         const oppositeTeam = cheesboard.getOppositeTeam(cheesBoardColor.color);
         cheesboard.resetCheesBoxCanBeEatable(cheesboard.clonedBoard);

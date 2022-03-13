@@ -133,7 +133,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           if(this.fromToCheesBox.action === Action.move) {
             this.cheesboard.movePawnChees(this.fromToCheesBox.toCheesBox, this.fromToCheesBox.fromCheesBox);
           } else {
-            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox);
+            this.cheesboard.swapPawnChees(this.fromToCheesBox.fromCheesBox, this.fromToCheesBox.toCheesBox, this.connector);
           }
         } else {
           this.counter = 0;
@@ -152,7 +152,7 @@ export class ChessboardComponent implements OnInit, OnDestroy {
           this.cheesboard.movePawnChees(from, to);
           this.tryCastling(from, to);
         } else {
-          this.cheesboard.eatPawnChees(from, to);
+          this.cheesboard.eatPawnChees(from, to, this.connector);
         }
         setTimeout(() => {
           const oppositeTeam = this.cheesboard.getOppositeTeam(this.currentTeam);

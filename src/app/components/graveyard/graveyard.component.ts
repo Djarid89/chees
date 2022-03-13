@@ -10,7 +10,7 @@ import { IPawnCheesType } from '../pawn-chees/interface/pawn-chees';
   styleUrls: ['./graveyard.component.scss']
 })
 export class GraveyardComponent {
-  @Input() pawnCheesesToResurrect!: PawnChees[] | undefined;
+  @Input() graveyard!: PawnChees[] | undefined;
   @Output() close = new EventEmitter();
   IPawnCheesType = IPawnCheesType;
   resurrectionSub!: Subscription;
@@ -18,7 +18,7 @@ export class GraveyardComponent {
   constructor(private readonly connector: ConnectorService) { }
 
   resurrection(pawnChees: PawnChees): void {
-    this.connector.doResurrect$.next(pawnChees.type);
+    this.connector.doResurrect$.next(pawnChees);
     this.close.emit();
   }
 }
